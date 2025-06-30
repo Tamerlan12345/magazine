@@ -6,7 +6,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Свобода Слова - Отзывы</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://ucarecdn.com/libs/widget/3.x/uploadcare.full.min.js" charset="utf-8"></script>
     <script src="https://unpkg.com/imask"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap');
@@ -15,8 +14,6 @@
         .dark .bg-grid-pattern { background-color: #0f172a; background-image: linear-gradient(rgba(248, 250, 252, 0.06) 1px, transparent 1px), linear-gradient(to right, rgba(248, 250, 252, 0.06) 1px, transparent 1px); }
         .animate-slide-up { animation: slideUp 0.5s ease-out forwards; }
         @keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
-        .uploadcare--widget__button_type_open { transition: all 0.2s ease-in-out; }
-        .uploadcare--widget__button_type_open:focus { box-shadow: 0 0 0 3px rgba(14, 165, 233, 0.4); }
     </style>
 </head>
 
@@ -53,31 +50,27 @@
                     </div>
                     <div id="mission-container"></div>
                     
-                    <form id="review-form" action="https://formsubmit.co/centr-cool@mail.ru" method="POST" enctype="multipart/form-data" class="space-y-5">
+                    <form id="review-form" action="https://formsubmit.co/centr-cool@mail.ru" method="POST" class="space-y-5">
                         <input type="hidden" name="_subject" value="Новый отзыв с сайта 'Свобода Слова'!">
                         <input type="hidden" name="_captcha" value="false">
                         <input type="hidden" name="Магазин" id="hidden-store-input">
                         <input type="hidden" name="Категория" id="hidden-category-input">
                         <input type="hidden" name="Рейтинг" id="hidden-rating-input">
                         <input type="hidden" name="Уровень_пользователя" id="hidden-level-input">
+                        <input type="hidden" name="Фотография" value="Не прикреплено">
                         
                         <div>
                             <label class="block text-sm font-medium text-slate-600 mb-2 text-center">Ваша общая оценка</label>
                             <div id="rating-selection" class="flex justify-center gap-2 sm:gap-3"></div>
                         </div>
-                        <textarea name="Отзыв" id="reviewText-input" rows="5" required class="w-full p-3 bg-slate-100 rounded-lg border focus:ring-2 focus:ring-cyan-500"></textarea>
+                        <textarea name="Отзыв" id="reviewText-input" rows="5" required class="w-full p-3 bg-slate-100 rounded-lg border focus:ring-2 focus:ring-cyan-500" placeholder="Ваш отзыв..."></textarea>
                         
                         <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                             <input type="text" name="Имя" id="name-input" required class="w-full p-3 bg-slate-100 rounded-lg border focus:ring-2 focus:ring-cyan-500" placeholder="Ваше Имя"/>
-                             <input type="tel" name="Телефон" id="phone-input" required class="w-full p-3 bg-slate-100 rounded-lg border focus:ring-2 focus:ring-cyan-500" placeholder="+7 (___) ___-__-__"/>
-                             <input type="email" name="email" id="email-input" required class="w-full p-3 bg-slate-100 rounded-lg border focus:ring-2 focus:ring-cyan-500" placeholder="Ваш Email (для ответа)"/>
+                                <input type="text" name="Имя" id="name-input" required class="w-full p-3 bg-slate-100 rounded-lg border focus:ring-2 focus:ring-cyan-500" placeholder="Ваше Имя"/>
+                                <input type="tel" name="Телефон" id="phone-input" required class="w-full p-3 bg-slate-100 rounded-lg border focus:ring-2 focus:ring-cyan-500" placeholder="+7 (___) ___-__-__"/>
+                                <input type="email" name="email" id="email-input" required class="w-full p-3 bg-slate-100 rounded-lg border focus:ring-2 focus:ring-cyan-500" placeholder="Ваш Email (для ответа)"/>
                         </div>
                         
-                        <div class="mt-1 text-center">
-                            <label class="block text-sm font-medium text-slate-600 mb-2">Загрузите фото</label>
-                            <input name="attachment" id="file-upload" type="file" accept="image/*" required class="block w-full text-sm text-slate-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-cyan-50 file:text-cyan-700 hover:file:bg-cyan-100"/>
-                        </div>
-
                         <div id="reward-container" class="text-center bg-yellow-100/50 text-yellow-800 p-3 rounded-lg font-semibold border"></div>
                         <p id="form-error" class="text-red-500 text-sm text-center hidden"></p>
                         <div class="flex items-center justify-between pt-4">
@@ -137,8 +130,8 @@
             document.getElementById('phone-input').addEventListener('input', (e) => this.handlePhoneInput(e));
             this.form.addEventListener('submit', (e) => this.handleSubmit(e));
             
-            // Закомментировал, так как этого элемента нет в финальной версии
-            // document.getElementById('leave-another-review-btn').addEventListener('click', () => this.reset());
+            // Восстановил кнопку для сброса формы
+            document.getElementById('leave-another-review-btn').addEventListener('click', () => window.location.reload());
         },
         
         setupPhoneMask() {
@@ -202,11 +195,12 @@
         handleSubmit: (e) => {
             const formError = document.getElementById('form-error');
             const phoneInput = document.getElementById('phone-input');
-            const fileInput = document.getElementById('file-upload');
-
-            if (!isValidPhone(phoneInput.value) || !state.rating || !fileInput.files.length) {
+            
+            // --- ПРОВЕРКА ФАЙЛА УДАЛЕНА ---
+            if (!isValidPhone(phoneInput.value) || !state.rating) {
                 e.preventDefault();
-                formError.textContent = 'Пожалуйста, заполните все поля, выберите оценку и фото.';
+                // --- ТЕКСТ ОШИБКИ ИЗМЕНЕН ---
+                formError.textContent = 'Пожалуйста, заполните все поля и выберите оценку.';
                 formError.classList.remove('hidden');
                 return;
             }
@@ -222,6 +216,13 @@
             document.getElementById('hidden-category-input').value = state.selectedCategory;
             document.getElementById('hidden-rating-input').value = state.rating ? `${state.rating}/5 (${RATINGS.find(r => r.value === state.rating).label})` : '';
             document.getElementById('hidden-level-input').value = LEVELS[finalUserLevelKey].name;
+
+            // Код ниже может понадобиться, если вы захотите показывать экран успеха без перезагрузки,
+            // но для formsubmit.co стандартное поведение - это перенаправление.
+            // e.preventDefault();
+            // userForm.mainContent.classList.add('hidden');
+            // userForm.successContainer.classList.remove('hidden');
+            // document.getElementById('success-text').innerHTML = `На ваш счет зачислено ${state.rewardAmount} ₸.`;
         },
     };
 
