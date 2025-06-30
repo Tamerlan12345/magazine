@@ -6,124 +6,177 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Свобода Слова - Отзывы</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    
     <script src="https://ucarecdn.com/libs/widget/3.x/uploadcare.full.min.js" charset="utf-8"></script>
-
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap');
         body { font-family: 'Inter', sans-serif; -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; }
-        .bg-dots-pattern { background-image: radial-gradient(circle, rgba(128, 128, 128, 0.1) 1px, transparent 1px); background-size: 20px 20px; }
-        .animate-fade-in { animation: fadeIn .5s ease-in-out; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        .bg-grid-pattern { background-color: #f8fafc; background-image: linear-gradient(rgba(15, 23, 42, 0.04) 1px, transparent 1px), linear-gradient(to right, rgba(15, 23, 42, 0.04) 1px, transparent 1px); background-size: 24px 24px; }
+        .dark .bg-grid-pattern { background-color: #0f172a; background-image: linear-gradient(rgba(248, 250, 252, 0.06) 1px, transparent 1px), linear-gradient(to right, rgba(248, 250, 252, 0.06) 1px, transparent 1px); }
+        .animate-slide-up { animation: slideUp 0.5s ease-out forwards; }
+        @keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        /* Стили для кастомного фокус-ринга Uploadcare */
+        .uploadcare--widget__button_type_open { transition: all 0.2s ease-in-out; }
+        .uploadcare--widget__button_type_open:focus { box-shadow: 0 0 0 3px rgba(14, 165, 233, 0.4); }
     </style>
 </head>
 
-<body class="bg-gray-100 dark:bg-gray-900 min-h-screen w-full flex items-center justify-center p-4 antialiased bg-dots-pattern">
+<body class="bg-slate-50 dark:bg-slate-900 min-h-screen w-full flex items-center justify-center p-4 antialiased bg-grid-pattern">
     <div id="app-container" class="w-full">
         <div id="view-user-form" class="w-full">
-            <div class="w-full max-w-2xl mx-auto bg-white dark:bg-gray-800/50 backdrop-blur-sm rounded-2xl shadow-2xl p-6 sm:p-8 relative">
+            <div class="w-full max-w-2xl mx-auto bg-white/80 dark:bg-slate-800/80 backdrop-blur-xl rounded-2xl shadow-2xl p-6 sm:p-8 relative border border-slate-200 dark:border-slate-700">
                 
                 <div id="main-content">
                     <div class="text-center mb-6">
-                        <h1 class="text-4xl font-bold text-gray-800 dark:text-white tracking-tight">Свобода Слова</h1>
-                        <p class="text-gray-500 dark:text-gray-400 mt-2">Оставьте отзыв - получите баллы!</p>
+                        <h1 class="text-4xl font-extrabold text-slate-800 dark:text-white tracking-tight">Свобода Слова</h1>
+                        <p class="text-slate-500 dark:text-slate-400 mt-2">Оставляйте отзывы, повышайте уровень и получайте больше наград!</p>
                     </div>
 
                     <div class="flex justify-center items-center mb-8 space-x-2">
-                        <div id="step-indicator-1" class="w-10 h-10 rounded-full flex items-center justify-center font-bold text-lg transition-all duration-500 bg-indigo-600 text-white shadow-lg">1</div>
-                        <div id="step-line-1" class="h-1 flex-1 transition-all duration-500 rounded-full bg-gray-200 dark:bg-gray-700"></div>
-                        <div id="step-indicator-2" class="w-10 h-10 rounded-full flex items-center justify-center font-bold text-lg transition-all duration-500 bg-gray-200 dark:bg-gray-700 text-gray-500">2</div>
-                        <div id="step-line-2" class="h-1 flex-1 transition-all duration-500 rounded-full bg-gray-200 dark:bg-gray-700"></div>
-                        <div id="step-indicator-3" class="w-10 h-10 rounded-full flex items-center justify-center font-bold text-lg transition-all duration-500 bg-gray-200 dark:bg-gray-700 text-gray-500">3</div>
+                        <div id="step-indicator-1" class="w-9 h-9 rounded-full flex items-center justify-center font-bold text-lg transition-all duration-300 bg-cyan-600 text-white shadow-lg">1</div>
+                        <div class="h-1 flex-1 transition-all duration-500 rounded-full bg-slate-200 dark:bg-slate-700"><div id="step-line-1" class="h-1 rounded-full bg-cyan-600 w-0 transition-all duration-500"></div></div>
+                        <div id="step-indicator-2" class="w-9 h-9 rounded-full flex items-center justify-center font-bold text-lg transition-all duration-300 bg-slate-200 dark:bg-slate-700 text-slate-500">2</div>
+                        <div class="h-1 flex-1 transition-all duration-500 rounded-full bg-slate-200 dark:bg-slate-700"><div id="step-line-2" class="h-1 rounded-full bg-cyan-600 w-0 transition-all duration-500"></div></div>
+                        <div id="step-indicator-3" class="w-9 h-9 rounded-full flex items-center justify-center font-bold text-lg transition-all duration-300 bg-slate-200 dark:bg-slate-700 text-slate-500">3</div>
                     </div>
 
-                    <div id="step-1" class="animate-fade-in"><h2 class="font-bold text-xl text-center text-gray-800 dark:text-gray-200 mb-6">Шаг 1: Выберите магазин</h2><div id="store-selection" class="grid grid-cols-1 sm:grid-cols-3 gap-4"></div></div>
-                    <div id="step-2" class="hidden animate-fade-in"><h2 class="font-bold text-xl text-center text-gray-800 dark:text-gray-200 mb-6">Шаг 2: Выберите категорию отзыва</h2><div id="category-selection" class="space-y-4"></div><button id="back-to-step-1" class="mt-6 text-sm text-gray-500 dark:text-gray-400 hover:underline">← Назад к выбору магазина</button></div>
+                    <div id="step-1" class="animate-slide-up"><h2 class="font-bold text-xl text-center text-slate-800 dark:text-slate-200 mb-6">Шаг 1: Выберите магазин</h2><div id="store-selection" class="grid grid-cols-1 sm:grid-cols-3 gap-4"></div></div>
+                    <div id="step-2" class="hidden animate-slide-up"><h2 class="font-bold text-xl text-center text-slate-800 dark:text-slate-200 mb-6">Шаг 2: Выберите категорию отзыва</h2><div id="category-selection" class="space-y-4"></div><button id="back-to-step-1" class="mt-6 text-sm text-slate-500 dark:text-slate-400 hover:text-cyan-600 transition-colors">← Назад к выбору магазина</button></div>
 
-                    <div id="step-3" class="hidden animate-fade-in">
-                        <h2 class="font-bold text-xl text-center text-gray-800 dark:text-gray-200 mb-2">Шаг 3: Ваша миссия и оценка</h2>
+                    <div id="step-3" class="hidden animate-slide-up">
+                        <h2 class="font-bold text-xl text-center text-slate-800 dark:text-slate-200 mb-2">Шаг 3: Ваша миссия и оценка</h2>
+                        
+                        <div id="user-profile" class="hidden my-4 p-3 bg-slate-100 dark:bg-slate-700/50 rounded-lg text-center animate-slide-up border border-slate-200 dark:border-slate-700">
+                            <p class="text-sm text-slate-600 dark:text-slate-300">Профиль: <strong id="profile-phone" class="font-semibold text-slate-800 dark:text-slate-100"></strong></p>
+                            <div class="flex items-center justify-center gap-3 mt-2">
+                                <span id="profile-level-badge" class="level-badge text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wider"></span>
+                                <span class="text-xs text-slate-500 dark:text-slate-400">Отзывов: <strong id="profile-count" class="font-bold text-slate-700 dark:text-slate-200"></strong></span>
+                            </div>
+                        </div>
+                        
                         <div id="mission-container"></div>
                         
-                        <form name="reviews-with-photo-uploadcare" id="review-form" class="space-y-5" netlify>
+                        <form name="reviews-gamified" id="review-form" class="space-y-5" netlify>
                             <input type="hidden" name="store" id="hidden-store-input">
                             <input type="hidden" name="category" id="hidden-category-input">
                             <input type="hidden" name="rating" id="hidden-rating-input">
                             <input type="hidden" name="photo_url" id="photo-url-input">
+                            <input type="hidden" name="user_level" id="hidden-level-input">
 
                             <div>
-                                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2 text-center">Ваша общая оценка</label>
-                                <div id="rating-selection" class="flex justify-center gap-2 sm:gap-4"></div>
+                                <label class="block text-sm font-medium text-slate-600 dark:text-slate-300 mb-2 text-center">Ваша общая оценка</label>
+                                <div id="rating-selection" class="flex justify-center gap-2 sm:gap-3"></div>
                             </div>
-                            <textarea name="review_text" id="reviewText-input" rows="5" required class="w-full p-3 bg-gray-100 rounded-lg border focus:outline-none focus:ring-2 focus:ring-indigo-500" placeholder="Начните писать здесь..."></textarea>
+                            <textarea name="review_text" id="reviewText-input" rows="5" required class="w-full p-3 bg-slate-100 dark:bg-slate-700 text-slate-800 dark:text-slate-200 rounded-lg border border-slate-300 dark:border-slate-600 focus:outline-none focus:ring-2 focus:ring-cyan-500 transition-colors" placeholder="Начните писать здесь..."></textarea>
                             
-                            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                                 <input type="text" name="name" id="name-input" required class="w-full p-3 bg-gray-100 rounded-lg border focus:outline-none focus:ring-2 focus:ring-indigo-500" placeholder="Ваше Имя"/>
-                                 <input type="tel" name="phone" id="phone-input" required class="w-full p-3 bg-gray-100 rounded-lg border focus:outline-none focus:ring-2 focus:ring-indigo-500" placeholder="Ваш Телефон" />
-                                 <input type="email" name="email" id="email-input" required class="w-full p-3 bg-gray-100 rounded-lg border focus:outline-none focus:ring-2 focus:ring-indigo-500" placeholder="Ваш Email"/>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                 <input type="text" name="name" id="name-input" required class="w-full p-3 bg-slate-100 dark:bg-slate-700 text-slate-800 dark:text-slate-200 rounded-lg border border-slate-300 dark:border-slate-600 focus:outline-none focus:ring-2 focus:ring-cyan-500 transition-colors" placeholder="Ваше Имя"/>
+                                 <input type="tel" name="phone" id="phone-input" required pattern="[78][0-9]{10}" class="w-full p-3 bg-slate-100 dark:bg-slate-700 text-slate-800 dark:text-slate-200 rounded-lg border border-slate-300 dark:border-slate-600 focus:outline-none focus:ring-2 focus:ring-cyan-500 transition-colors" placeholder="Ваш Телефон (напр. 87071234567)"/>
                             </div>
                             
                             <div class="mt-1 text-center">
-                                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Загрузите фото (обязательно)</label>
-                                <input
-                                    type="hidden"
-                                    role="uploadcare-uploader"
-                                    data-public-key="eca0b5d27dcb2fa395bd"
-                                    data-tabs="file camera url"
-                                    data-effects="crop,rotate,mirror"
-                                    id="file-uploader"
-                                />
-                                <div id="preview-container" class="mt-4 hidden">
-                                    <img id="photo-preview" src="" alt="Предпросмотр фото" class="max-h-40 mx-auto rounded-md shadow"/>
-                                    <p class="text-sm text-green-600 mt-2">✅ Фото успешно загружено!</p>
-                                </div>
+                                <label class="block text-sm font-medium text-slate-600 dark:text-slate-300 mb-2">Загрузите фото (обязательно)</label>
+                                <input type="hidden" role="uploadcare-uploader" data-public-key="eca0b5d27dcb2fa395bd" data-tabs="file camera url" data-effects="crop,rotate,mirror" id="file-uploader" data-clearable="true" />
+                                <div id="preview-container" class="mt-4 hidden"><img id="photo-preview" src="" alt="Предпросмотр фото" class="max-h-40 mx-auto rounded-lg shadow-md"/><p class="text-sm text-green-600 mt-2">✅ Фото успешно загружено!</p></div>
                             </div>
 
-                            <div id="reward-container" class="text-center bg-green-50 text-green-800 p-3 rounded-lg font-semibold"></div>
+                            <div id="reward-container" class="text-center bg-yellow-100/50 dark:bg-yellow-400/10 text-yellow-800 dark:text-yellow-300 p-3 rounded-lg font-semibold border border-yellow-200 dark:border-yellow-400/20"></div>
                             <p id="form-error" class="text-red-500 text-sm text-center hidden"></p>
                             <div class="flex items-center justify-between pt-4">
-                                <button type="button" id="back-to-step-2" class="text-sm text-gray-500 hover:underline">← Назад</button>
-                                <button type="submit" id="submit-review-btn" class="bg-green-600 hover:bg-green-700 text-white font-bold py-3 px-8 rounded-lg focus:outline-none focus:shadow-outline transition-all duration-300 disabled:opacity-50 transform hover:scale-105">Отправить отзыв</button>
+                                <button type="button" id="back-to-step-2" class="text-sm text-slate-500 dark:text-slate-400 hover:text-cyan-600 transition-colors">← Назад</button>
+                                <button type="submit" id="submit-review-btn" class="bg-cyan-600 hover:bg-cyan-700 text-white font-bold py-3 px-8 rounded-lg focus:outline-none focus:ring-4 focus:ring-cyan-500/50 transition-all duration-300 transform hover:scale-105 disabled:opacity-70 disabled:scale-100 flex items-center justify-center gap-2">
+                                    <span id="submit-btn-text">Отправить отзыв</span>
+                                </button>
                             </div>
                         </form>
                     </div>
                 </div>
 
-                <div id="success-message" class="hidden animate-fade-in text-center">
-                     <svg class="h-16 w-16 mx-auto text-green-500 mb-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
-                     <h2 class="text-2xl font-bold text-gray-800 dark:text-white mb-2">Отлично!</h2>
-                     <p id="success-text" class="text-gray-600 dark:text-gray-400 mb-6"></p>
-                     <button id="leave-another-review-btn" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3 px-4 rounded-lg">Оставить еще один отзыв</button>
+                <div id="success-message" class="hidden animate-slide-up text-center py-8">
+                     <svg class="h-20 w-20 mx-auto text-green-500 mb-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+                     <h2 class="text-3xl font-extrabold text-slate-800 dark:text-white mb-2">Отлично! Отзыв отправлен!</h2>
+                     <div id="success-text" class="text-slate-600 dark:text-slate-300 mb-8 p-4 bg-slate-100 dark:bg-slate-700/50 rounded-lg"></div>
+                     <button id="leave-another-review-btn" class="w-full bg-cyan-600 hover:bg-cyan-700 text-white font-bold py-3 px-4 rounded-lg focus:outline-none focus:ring-4 focus:ring-cyan-500/50 transition-all transform hover:scale-105">Оставить еще один отзыв</button>
                 </div>
             </div>
         </div>
     </div> 
 
 <script type="module">
-    const state = { currentStep: 1, selectedStore: '', selectedCategory: '', rating: null, rewardAmount: 150 };
-    const STORES = ['Small', 'У Дома Март', 'Наурыз'];
+    // --- ОБЩЕЕ СОСТОЯНИЕ ПРИЛОЖЕНИЯ ---
+    const state = { currentStep: 1, selectedStore: '', selectedCategory: '', rating: null, rewardAmount: 0 };
+
+    // --- КОНСТАНТЫ И НАСТРОЙКИ ---
+    const STORES = ['Small', 'Magnum', 'Toimart'];
     const CATEGORIES = {
-        'Оценить качество магазина, персонала, обслуживания': `<svg class="h-6 w-6 mr-3 text-blue-500" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"><path d="M3 1a1 1 0 000 2h1.22l.305 1.222a.997.997 0 00.01.042l1.358 5.43-.893.892C3.74 11.846 4.649 14 6.42 14h9.16c.55 0 1-.45 1-1s-.45-1-1-1H6.42c-.57 0-.962-.38-1.08-.884l.158-.078L6.4 11h8.38a1 1 0 00.99-.83l1.57-7.35A1 1 0 0015.59 1H3zM16 16.5a1.5 1.5 0 11-3 0 1.5 1.5 0 013 0zM6.5 18a1.5 1.5 0 100-3 1.5 1.5 0 000 3z" /></svg>`,
-        'Оценить вкусовые качества продукта': `<svg class="h-6 w-6 mr-3 text-green-500" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" /></svg>`,
+        'Качество магазина': { reward: 150, icon: `<svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 mr-3 text-cyan-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" /></svg>` },
+        'Качество продукта': { reward: 100, icon: `<svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 mr-3 text-green-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.28a2 2 0 00-1.846.901l-1.615 2.887a2 2 0 00.902 2.748l.43.244a2 2 0 002.748-.901l1.615-2.887a6 6 0 013.86-.517l.318-.158a6 6 0 003.86-.517l2.387.477a2 2 0 001.022.547l.43.244a2 2 0 002.748-.901l1.615-2.887a2 2 0 00-.902-2.748l-.43-.244z" /></svg>` },
     };
     const RATINGS = [{ value: 1, emoji: '😡', label: 'Ужасно' }, { value: 2, emoji: '😞', label: 'Плохо' }, { value: 3, emoji: '😐', label: 'Нормально' }, { value: 4, emoji: '🙂', label: 'Хорошо' }, { value: 5, emoji: '🤩', label: 'Отлично' }];
+    
+    // --- ЛОГИКА ГЕЙМИФИКАЦИИ ---
+    const LEVELS = {
+        0: { name: 'Новичок', color: 'bg-slate-200 text-slate-800', nextLevel: 5 },
+        1: { name: 'Опытный', color: 'bg-cyan-200 text-cyan-800', nextLevel: 15 },
+        2: { name: 'Эксперт', color: 'bg-yellow-200 text-yellow-800', nextLevel: 50 },
+        3: { name: 'Гуру', color: 'bg-fuchsia-200 text-fuchsia-800', nextLevel: Infinity }
+    };
     const MISSIONS = {
-        'Оценить качество магазина, персонала, обслуживания': ["Опишите чистоту и удобство расположения товаров.", "Как вы оцениваете работу кассиров?", "Помогли ли вам консультанты в зале?",],
-        'Оценить вкусовые качества продукта': ["Опишите вкус классической Coca-Cola.", "Попробуйте Fanta и опишите ее вкус.", "Насколько освежает Sprite?",]
+        'Качество магазина': {
+            'Новичок': ["Насколько чисто было в торговом зале и у входа? Оцените по 5-балльной шкале.", "Легко ли было найти нужный товар? Расскажите о навигации в магазине.", "Опишите вежливость кассира во время вашего последнего визита.", "Были ли свободные тележки или корзины, когда вы вошли?", "Какое общее впечатление от атмосферы в магазине (музыка, свет, запахи)?"],
+            'Опытный': ["Сравните свежесть овощей или фруктов в этом магазине с другим, где вы недавно были.", "Проверьте срок годности у 3-х молочных продуктов. Все ли в порядке? Расскажите, что проверяли.", "Найдите сотрудника в зале и задайте вопрос о местонахождении товара. Опишите его реакцию и помощь.", "Насколько быстро двигалась очередь на кассе? Засеките примерное время ожидания.", "Есть ли в магазине уникальные товары, которые вы не находили в других местах?"],
+            'Эксперт': ["Проанализируйте выкладку акционных товаров. Насколько она заметна и удобна для покупателей?", "Оцените ассортимент одной конкретной категории (например, 'сыры' или 'бытовая химия'). Достаточен ли он?", "Как магазин справляется с 'часами пик'? Создаются ли дополнительные кассы?", "Сфотографируйте самый креативный или, наоборот, самый неудачный элемент мерчандайзинга в магазине.", "Предложите одно улучшение для этого магазина, которое сделало бы ваш опыт покупок значительно лучше."]
+        },
+        'Качество продукта': {
+            'Новичок': ["Опишите вкус и аромат купленного хлеба. Он свежий и хрустящий?", "Насколько газированным был напиток, который вы купили? Опишите свои ощущения.", "Оцените упаковку продукта. Она была целой, чистой и удобной?", "Соответствовал ли вкус продукта вашим ожиданиям? Опишите почему.", "Какая была консистенция у купленного йогурта или творога?"],
+            'Опытный': ["Сравните вкус колбасы или сыра этого бренда с аналогом от другого производителя.", "Прочитайте состав продукта. Есть ли там ингредиенты, которые вас смущают? Почему?", "Приготовьте блюдо с использованием купленного продукта (например, макароны). Как он повел себя при готовке?", "Насколько цвет, запах и вид продукта соответствуют тому, что изображено на упаковке?", "Как долго продукт оставался свежим после вскрытия упаковки?"],
+            'Эксперт': ["Оцените соотношение цены и качества для данного продукта. Считаете ли вы его выгодной покупкой?", "Проанализируйте маркетинг этого продукта. Что в его рекламе или упаковке заставило вас его купить?", "Найдите в интернете отзывы на этот продукт. Совпадают ли они с вашим мнением?", "Какой у продукта 'послевкусие'? Остается ли оно приятным?", "Предложите, с какими другими продуктами или напитками идеально сочетается купленный вами товар."]
+        }
     };
 
+    // --- ФУНКЦИИ ДЛЯ РАБОТЫ С ДАННЫМИ ПОЛЬЗОВАТЕЛЯ ---
+    const normalizePhone = (phone) => { const digits = phone.replace(/\D/g, ''); if (digits.startsWith('8')) return '7' + digits.substring(1); return digits; };
+    const isValidPhone = (phone) => { const normalized = normalizePhone(phone); return normalized.startsWith('7') && normalized.length === 11; };
+    const getUserData = (phone) => {
+        const normalizedPhone = normalizePhone(phone);
+        const data = localStorage.getItem(normalizedPhone);
+        const userData = data ? JSON.parse(data) : { submissionCount: 0 };
+        let currentLevel = 0;
+        for (const level in LEVELS) { if (userData.submissionCount >= (LEVELS[level-1]?.nextLevel || 0)) { currentLevel = level; } }
+        userData.level = currentLevel;
+        return userData;
+    };
+    const saveUserData = (phone, userData) => { const normalizedPhone = normalizePhone(phone); localStorage.setItem(normalizedPhone, JSON.stringify(userData)); };
+
+    // --- ОСНОВНОЙ ОБЪЕКТ ДЛЯ УПРАВЛЕНИЯ ФОРМОЙ ---
     const userForm = {
         mainContent: document.getElementById('main-content'),
         successMsg: document.getElementById('success-message'),
         form: document.getElementById('review-form'),
         
         init() {
-            this.setupUploadcareWidget();
-            this.populateStores(); this.populateCategories(); this.populateRatings();
+            this.setupUploadcareWidget(); this.populateStores(); this.populateCategories(); this.populateRatings();
             document.getElementById('back-to-step-1').addEventListener('click', () => this.goToStep(1));
             document.getElementById('back-to-step-2').addEventListener('click', () => this.goToStep(2));
             document.getElementById('leave-another-review-btn').addEventListener('click', () => this.reset());
+            document.getElementById('phone-input').addEventListener('input', this.handlePhoneInput);
             this.form.addEventListener('submit', this.handleSubmit);
         },
+        
+        handlePhoneInput(e) {
+            const phone = e.target.value;
+            const profileBlock = document.getElementById('user-profile');
+            if (isValidPhone(phone)) {
+                const userData = getUserData(phone); const levelInfo = LEVELS[userData.level];
+                document.getElementById('profile-phone').textContent = `+${normalizePhone(phone)}`;
+                document.getElementById('profile-count').textContent = userData.submissionCount;
+                const badge = document.getElementById('profile-level-badge');
+                badge.textContent = levelInfo.name; badge.className = `level-badge text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wider ${levelInfo.color}`;
+                profileBlock.classList.remove('hidden');
+            } else {
+                profileBlock.classList.add('hidden');
+            }
+        },
+
         goToStep(step) {
             document.querySelectorAll('#main-content > div[id^="step-"]').forEach(el => el.classList.add('hidden'));
             const currentStepEl = document.getElementById(`step-${step}`);
@@ -131,101 +184,107 @@
 
             for (let i = 1; i <= 3; i++) {
                 const indicator = document.getElementById(`step-indicator-${i}`); const line = document.getElementById(`step-line-${i-1}`);
-                if (indicator) { if (i <= step) { indicator.classList.add('bg-indigo-600', 'text-white'); } else { indicator.classList.remove('bg-indigo-600', 'text-white'); } }
-                if (line) { if (i < step) { line.classList.add('bg-indigo-600'); } else { line.classList.remove('bg-indigo-600'); } }
+                if(indicator) {
+                    if (i < step) { indicator.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" /></svg>`; indicator.classList.add('bg-cyan-600', 'text-white'); indicator.classList.remove('bg-slate-200', 'text-slate-500'); }
+                    else if (i == step) { indicator.innerHTML = i; indicator.classList.add('bg-cyan-600', 'text-white'); indicator.classList.remove('bg-slate-200', 'text-slate-500'); }
+                    else { indicator.innerHTML = i; indicator.classList.remove('bg-cyan-600', 'text-white'); indicator.classList.add('bg-slate-200', 'text-slate-500'); }
+                }
+                if (line) { if (i < step) { line.style.width = '100%'; } else { line.style.width = '0%'; } }
             }
             if (step === 3) this.generateMission();
         },
-        populateStores() { const c = document.getElementById('store-selection'); if (!c) return; c.innerHTML = ''; STORES.forEach(s => { const b = document.createElement('button'); b.type = 'button'; b.textContent = s; b.className = "p-6 bg-gray-50 rounded-xl text-lg font-semibold hover:bg-white hover:shadow-lg transition-all"; b.onclick = () => { state.selectedStore = s; this.goToStep(2); }; c.appendChild(b); }); },
-        populateCategories() { const c = document.getElementById('category-selection'); if (!c) return; c.innerHTML = ''; Object.entries(CATEGORIES).forEach(([n, i]) => { const b = document.createElement('button'); b.type = 'button'; b.innerHTML = `${i}<span>${n}</span>`; b.className = "w-full flex items-center p-4 bg-gray-50 rounded-xl text-lg hover:bg-white transition-colors"; b.onclick = () => { state.selectedCategory = n; this.goToStep(3); }; c.appendChild(b); }); },
-        populateRatings() {
-             const container = document.getElementById('rating-selection'); if (!container) return; container.innerHTML = '';
-             RATINGS.forEach(r => { const button = document.createElement('button'); button.type = 'button'; button.dataset.value = r.value; button.innerHTML = `<span class="text-3xl">${r.emoji}</span><span class="text-xs mt-1 font-semibold text-gray-600">${r.label}</span>`; button.className = 'flex flex-col items-center p-2 rounded-xl transition-all w-1/5 bg-gray-100 hover:bg-gray-200'; button.onclick = () => { state.rating = r.value; container.childNodes.forEach(child => { child.classList.remove('bg-indigo-600', 'text-white', 'scale-110'); child.querySelector('span:last-child').classList.remove('text-white'); }); button.classList.add('bg-indigo-600', 'text-white', 'scale-110'); button.querySelector('span:last-child').classList.add('text-white'); }; container.appendChild(button); });
-        },
-        generateMission() {
-            const container = document.getElementById('mission-container'); if (!container) return;
-            const missionList = MISSIONS[state.selectedCategory] || []; let missionText = missionList.length > 0 ? missionList[Math.floor(Math.random() * missionList.length)] : "Расскажите подробнее о вашем визите.";
-            container.innerHTML = `<div class="bg-indigo-50 p-4 rounded-xl mb-6 text-center border"><p class="text-indigo-800 font-medium">${missionText}</p></div>`;
-            const rewardEl = document.getElementById('reward-container'); if(rewardEl) rewardEl.textContent = `После проверки вы получите ${state.rewardAmount} ₸ на Kaspi`;
-        },
-        setupUploadcareWidget() {
-            const widget = uploadcare.Widget('[role=uploadcare-uploader]');
-            const photoUrlInput = document.getElementById('photo-url-input');
-            const previewContainer = document.getElementById('preview-container');
-            const photoPreview = document.getElementById('photo-preview');
-
-            widget.onChange(function(file) {
-                if (file) {
-                    file.done(function(info) {
-                        photoUrlInput.value = info.cdnUrl;
-                        photoPreview.src = info.cdnUrl;
-                        previewContainer.classList.remove('hidden');
-                    });
-                } else {
-                    photoUrlInput.value = '';
-                    previewContainer.classList.add('hidden');
-                }
+        
+        populateStores() { const c = document.getElementById('store-selection'); if (!c) return; c.innerHTML = ''; STORES.forEach(s => { const b = document.createElement('button'); b.type = 'button'; b.textContent = s; b.className = "p-6 bg-slate-100 dark:bg-slate-700/50 rounded-xl text-lg font-semibold text-slate-800 dark:text-slate-200 hover:bg-white dark:hover:bg-slate-700 hover:shadow-lg transition-all transform hover:-translate-y-1 border border-slate-200 dark:border-slate-700"; b.onclick = () => { state.selectedStore = s; this.goToStep(2); }; c.appendChild(b); }); },
+        
+        populateCategories() {
+            const c = document.getElementById('category-selection'); if (!c) return; c.innerHTML = '';
+            Object.entries(CATEGORIES).forEach(([name, details]) => {
+                const b = document.createElement('button'); b.type = 'button';
+                b.innerHTML = `${details.icon}<div><p class="font-semibold text-slate-800 dark:text-slate-200">${name}</p><p class="text-sm text-slate-500 dark:text-slate-400">Награда: ${details.reward} ₸</p></div>`;
+                b.className = "w-full flex items-center p-4 bg-slate-100 dark:bg-slate-700/50 rounded-xl text-left hover:bg-white dark:hover:bg-slate-700 hover:shadow-lg transition-all transform hover:-translate-y-1 border border-slate-200 dark:border-slate-700";
+                b.onclick = () => { state.selectedCategory = name; state.rewardAmount = details.reward; this.goToStep(3); };
+                c.appendChild(b);
             });
         },
+        
+        populateRatings() {
+             const c = document.getElementById('rating-selection'); if (!c) return; c.innerHTML = '';
+             RATINGS.forEach(r => { const b = document.createElement('button'); b.type = 'button'; b.dataset.value = r.value; b.innerHTML = `<span class="text-3xl transition-transform duration-200 group-hover:scale-125">${r.emoji}</span><span class="text-xs mt-1 font-semibold text-slate-600 dark:text-slate-300">${r.label}</span>`; b.className = 'group flex flex-col items-center p-2 rounded-xl transition-all w-1/5 bg-slate-100 dark:bg-slate-700/50 hover:bg-white dark:hover:bg-slate-700'; b.onclick = () => { state.rating = r.value; c.childNodes.forEach(child => { child.classList.remove('bg-cyan-600', 'text-white', 'scale-110', 'shadow-lg'); child.querySelector('span:last-child').classList.remove('text-white', 'dark:text-white'); child.querySelector('span:last-child').classList.add('text-slate-600', 'dark:text-slate-300'); }); b.classList.add('bg-cyan-600', 'text-white', 'scale-110', 'shadow-lg'); b.querySelector('span:last-child').classList.add('text-white', 'dark:text-white'); }; c.appendChild(b); });
+        },
+        
+        generateMission() {
+            const container = document.getElementById('mission-container'); if (!container) return;
+            const phone = document.getElementById('phone-input').value;
+            const userLevelName = LEVELS[getUserData(phone).level].name;
+            const missionList = MISSIONS[state.selectedCategory]?.[userLevelName] || ["Расскажите подробнее о вашем визите."];
+            let missionText = missionList[Math.floor(Math.random() * missionList.length)];
+            container.innerHTML = `<div class="bg-slate-100 dark:bg-slate-900/50 p-4 rounded-xl mb-6 text-center border border-slate-200 dark:border-slate-700"><p class="text-slate-700 dark:text-slate-300 font-medium">${missionText}</p></div>`;
+            const rewardEl = document.getElementById('reward-container');
+            if(rewardEl) rewardEl.textContent = `Ваша награда за эту миссию: ${state.rewardAmount} ₸`;
+        },
+
+        setupUploadcareWidget() {
+            const widget = uploadcare.Widget('[role=uploadcare-uploader]');
+            widget.onChange(file => {
+                const photoUrlInput = document.getElementById('photo-url-input'); const previewContainer = document.getElementById('preview-container'); const photoPreview = document.getElementById('photo-preview');
+                if (file) { file.done(info => { photoUrlInput.value = info.cdnUrl; photoPreview.src = info.cdnUrl; previewContainer.classList.remove('hidden'); }); }
+                else { photoUrlInput.value = ''; previewContainer.classList.add('hidden'); }
+            });
+        },
+
         handleSubmit: async (e) => {
             e.preventDefault();
-            const formError = document.getElementById('form-error');
-            const submitBtn = document.getElementById('submit-review-btn');
+            const form = e.target; const formError = document.getElementById('form-error'); const submitBtn = document.getElementById('submit-review-btn');
+            const phoneInput = document.getElementById('phone-input');
+            if (!isValidPhone(phoneInput.value)) { formError.textContent = 'Пожалуйста, введите корректный номер телефона (11 цифр, начинается с 7 или 8).'; formError.classList.remove('hidden'); return; }
+            const formData = new FormData(form);
+            if (!formData.get('name') || !formData.get('phone') || !formData.get('review_text') || !state.rating || !formData.get('photo_url')) { formError.textContent = 'Пожалуйста, заполните все поля и загрузите фото.'; formError.classList.remove('hidden'); return; }
+            
+            const normalizedPhone = normalizePhone(phoneInput.value);
+            const userData = getUserData(normalizedPhone);
+            userData.submissionCount += 1;
+            saveUserData(normalizedPhone, userData);
+            const finalUserLevel = getUserData(normalizedPhone).level;
             
             document.getElementById('hidden-store-input').value = state.selectedStore;
             document.getElementById('hidden-category-input').value = state.selectedCategory;
             document.getElementById('hidden-rating-input').value = state.rating ? `${state.rating}/5 (${RATINGS.find(r => r.value === state.rating).label})` : '';
+            document.getElementById('hidden-level-input').value = LEVELS[finalUserLevel].name;
 
-            const formData = new FormData(userForm.form);
-            
-            if (!formData.get('name') || !formData.get('phone') || !formData.get('email') || !formData.get('photo_url')) {
-                formError.textContent = 'Пожалуйста, заполните все поля и загрузите фото.';
-                formError.classList.remove('hidden');
-                return;
-            }
+            const finalFormData = new FormData(form);
             
             formError.classList.add('hidden');
             submitBtn.disabled = true;
-            submitBtn.textContent = 'Отправка...';
+            const originalBtnText = document.getElementById('submit-btn-text');
+            originalBtnText.innerHTML = `<svg class="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg> Отправка...`;
 
             try {
-                await fetch("/", {
-                    method: "POST",
-                    headers: { "Content-Type": "application/x-www-form-urlencoded" },
-                    body: new URLSearchParams(formData).toString(),
-                });
-                userForm.showSuccess();
+                const response = await fetch("/", { method: "POST", body: new URLSearchParams(finalFormData).toString(), headers: { "Content-Type": "application/x-www-form-urlencoded" } });
+                if (response.ok) { userForm.showSuccess(userData.submissionCount, finalUserLevel); }
+                else { throw new Error('Ошибка ответа сервера Netlify.'); }
             } catch (error) {
-                console.error("Ошибка при отправке в Netlify: ", error);
-                formError.textContent = 'Произошла ошибка при отправке.';
-                formError.classList.remove('hidden');
+                console.error("Ошибка при отправке в Netlify: ", error); formError.textContent = 'Произошла ошибка при отправке.'; formError.classList.remove('hidden');
             } finally {
-                submitBtn.disabled = false;
-                submitBtn.textContent = 'Отправить отзыв';
+                submitBtn.disabled = false; originalBtnText.textContent = 'Отправить отзыв';
             }
         },
-        showSuccess() {
-            document.getElementById('success-text').textContent = `Спасибо! Ваш отзыв успешно отправлен.`;
+
+        showSuccess(count, level) {
+            const nextLevelInfo = LEVELS[level];
+            let progressText = `<p>Теперь у вас <strong class="font-bold text-slate-700 dark:text-slate-100">${count}</strong> отзывов!</p>`;
+            if (nextLevelInfo.nextLevel !== Infinity) { progressText += `<p class="mt-2 text-sm">До следующего уровня <strong class="font-bold text-slate-700 dark:text-slate-100">'${LEVELS[level+1].name}'</strong> осталось <strong class="font-bold text-slate-700 dark:text-slate-100">${nextLevelInfo.nextLevel - count}</strong> отзывов.</p>` }
+            document.getElementById('success-text').innerHTML = progressText;
             this.mainContent.classList.add('hidden');
             this.successMsg.classList.remove('hidden');
         },
+
         reset() {
-            this.mainContent.classList.remove('hidden');
-            this.successMsg.classList.add('hidden');
-            this.form.reset();
-            state.rating = null;
-            
-            const photoUrlInput = document.getElementById('photo-url-input');
-            const previewContainer = document.getElementById('preview-container');
-            if(photoUrlInput) photoUrlInput.value = '';
-            if(previewContainer) previewContainer.classList.add('hidden');
-
-            // Сброс виджета Uploadcare
-            const widget = uploadcare.Widget('[role=uploadcare-uploader]');
-            widget.value(null);
-
-            this.populateRatings();
-            this.goToStep(1);
+            this.mainContent.classList.remove('hidden'); this.successMsg.classList.add('hidden'); this.form.reset();
+            state.rating = null; state.selectedCategory = ''; state.selectedStore = '';
+            document.getElementById('user-profile').classList.add('hidden');
+            document.getElementById('preview-container').classList.add('hidden');
+            uploadcare.Widget('[role=uploadcare-uploader]').value(null);
+            this.populateRatings(); this.goToStep(1);
         },
     };
 
