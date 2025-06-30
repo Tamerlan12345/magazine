@@ -65,10 +65,9 @@
                         </div>
                         <textarea name="Отзыв" id="reviewText-input" rows="5" required class="w-full p-3 bg-slate-100 rounded-lg border focus:ring-2 focus:ring-cyan-500" placeholder="Ваш отзыв..."></textarea>
                         
-                        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                                 <input type="text" name="Имя" id="name-input" required class="w-full p-3 bg-slate-100 rounded-lg border focus:ring-2 focus:ring-cyan-500" placeholder="Ваше Имя"/>
                                 <input type="tel" name="Телефон" id="phone-input" required class="w-full p-3 bg-slate-100 rounded-lg border focus:ring-2 focus:ring-cyan-500" placeholder="+7 (___) ___-__-__"/>
-                                <input type="email" name="email" id="email-input" required class="w-full p-3 bg-slate-100 rounded-lg border focus:ring-2 focus:ring-cyan-500" placeholder="Ваш Email (для ответа)"/>
                         </div>
                         
                         <div id="reward-container" class="text-center bg-yellow-100/50 text-yellow-800 p-3 rounded-lg font-semibold border"></div>
@@ -129,8 +128,6 @@
             document.getElementById('back-to-step-2').addEventListener('click', () => this.goToStep(2));
             document.getElementById('phone-input').addEventListener('input', (e) => this.handlePhoneInput(e));
             this.form.addEventListener('submit', (e) => this.handleSubmit(e));
-            
-            // Восстановил кнопку для сброса формы
             document.getElementById('leave-another-review-btn').addEventListener('click', () => window.location.reload());
         },
         
@@ -196,10 +193,8 @@
             const formError = document.getElementById('form-error');
             const phoneInput = document.getElementById('phone-input');
             
-            // --- ПРОВЕРКА ФАЙЛА УДАЛЕНА ---
             if (!isValidPhone(phoneInput.value) || !state.rating) {
                 e.preventDefault();
-                // --- ТЕКСТ ОШИБКИ ИЗМЕНЕН ---
                 formError.textContent = 'Пожалуйста, заполните все поля и выберите оценку.';
                 formError.classList.remove('hidden');
                 return;
@@ -216,13 +211,6 @@
             document.getElementById('hidden-category-input').value = state.selectedCategory;
             document.getElementById('hidden-rating-input').value = state.rating ? `${state.rating}/5 (${RATINGS.find(r => r.value === state.rating).label})` : '';
             document.getElementById('hidden-level-input').value = LEVELS[finalUserLevelKey].name;
-
-            // Код ниже может понадобиться, если вы захотите показывать экран успеха без перезагрузки,
-            // но для formsubmit.co стандартное поведение - это перенаправление.
-            // e.preventDefault();
-            // userForm.mainContent.classList.add('hidden');
-            // userForm.successContainer.classList.remove('hidden');
-            // document.getElementById('success-text').innerHTML = `На ваш счет зачислено ${state.rewardAmount} ₸.`;
         },
     };
 
