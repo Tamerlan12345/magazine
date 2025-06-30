@@ -67,9 +67,11 @@
                     </div>
                     <div id="mission-container"></div>
                     
-                    <form id="review-form" action="https://formsubmit.co/daurmb@gmail.com" method="POST" class="space-y-5">
-                        <input type="hidden" name="_subject" value="Новый отзыв с сайта 'Свобода Слова'!">
-                        <input type="hidden" name="_captcha" value="false">
+                    <form id="review-form" action="https://api.web3forms.com/submit" method="POST" class="space-y-5">
+                        <input type="hidden" name="access_key" value="fd4abaf2-15a8-4a56-9055-15296f810bb5">
+                        <input type="hidden" name="subject" value="Новый отзыв с сайта 'Свобода Слова!'">
+                        <input type="hidden" name="redirect" value="https://svoboda-slova-reviews.netlify.app/">
+
                         <input type="hidden" name="Магазин" id="hidden-store-input">
                         <input type="hidden" name="Категория" id="hidden-category-input">
                         <input type="hidden" name="Рейтинг" id="hidden-rating-input">
@@ -116,8 +118,7 @@
     const state = { currentStep: 1, selectedStore: '', selectedCategory: '', rating: null, rewardAmount: 0, photoUrl: '' };
 
     // --- КОНСТАНТЫ И НАСТРОЙКИ ---
-    // ВАЖНО: Замените 'YOUR_PUBLIC_KEY' на ваш публичный ключ из Uploadcare
-    const UPLOADCARE_PUBLIC_KEY = 'eca0b5d27dcb2fa395bd'; // <-- ЗАМЕНИТЕ ЭТОТ КЛЮЧ!
+    const UPLOADCARE_PUBLIC_KEY = 'eca0b5d27dcb2fa395bd';
     
     const STORES = ['Small', 'Magnum', 'Toimart'];
     const CATEGORIES = {
@@ -149,11 +150,10 @@
         form: document.getElementById('review-form'),
         
         init() {
-            // Инициализация Uploadcare Widget
             const uploadcareWidget = uploadcare.Widget('#file-upload-widget');
             document.querySelector('[role=uploadcare-uploader]').setAttribute('data-public-key', UPLOADCARE_PUBLIC_KEY);
             uploadcareWidget.onUploadComplete(fileInfo => {
-                state.photoUrl = fileInfo.cdnUrl; // Сохраняем URL фото в состояние
+                state.photoUrl = fileInfo.cdnUrl;
             });
 
             this.setupPhoneMask(); this.populateStores(); this.populateCategories(); this.populateRatings();
@@ -162,6 +162,15 @@
             document.getElementById('phone-input').addEventListener('input', (e) => this.handlePhoneInput(e));
             this.form.addEventListener('submit', (e) => this.handleSubmit(e));
             document.getElementById('leave-another-review-btn').addEventListener('click', () => this.reset());
+
+            // Показать сообщение об успехе, если пользователь был перенаправлен сюда
+            const urlParams = new URLSearchParams(window.location.search);
+            if (urlParams.has('submission') && urlParams.get('submission') === 'ok') {
+                this.mainContent.classList.add('hidden');
+                const successText = document.getElementById('success-text');
+                successText.innerHTML = `Ваш предыдущий отзыв был успешно отправлен. <br> Вы можете оставить еще один.`;
+                this.successContainer.classList.remove('hidden');
+            }
         },
         
         setupPhoneMask() {
@@ -182,6 +191,8 @@
         },
         
         reset() {
+            // Очищаем URL от параметров, чтобы сообщение об успехе не появлялось снова
+            window.history.replaceState({}, document.title, window.location.pathname);
             state.currentStep = 1;
             state.selectedStore = '';
             state.selectedCategory = '';
@@ -189,7 +200,6 @@
             state.photoUrl = '';
             this.form.reset();
             
-            // Сброс виджета Uploadcare
             const widget = uploadcare.Widget('#file-upload-widget');
             widget.value(null);
 
@@ -243,12 +253,12 @@
         },
 
         handleSubmit(e) {
-            e.preventDefault(); // Предотвращаем стандартную отправку, чтобы провести валидацию
             const formError = document.getElementById('form-error');
             const phoneInput = document.getElementById('phone-input');
 
             // Валидация
             if (!isValidPhone(phoneInput.value) || !state.rating || !state.photoUrl) {
+                e.preventDefault(); 
                 formError.textContent = 'Пожалуйста, заполните все поля, выберите оценку и загрузите фото.';
                 formError.classList.remove('hidden');
                 return;
@@ -267,15 +277,11 @@
             document.getElementById('hidden-rating-input').value = state.rating ? `${state.rating}/5 (${RATINGS.find(r => r.value === state.rating).label})` : '';
             document.getElementById('hidden-level-input').value = LEVELS[finalUserLevelKey].name;
             document.getElementById('hidden-photo-url-input').value = state.photoUrl;
-            
-            // Показываем сообщение об успехе и скрываем форму
-            this.mainContent.classList.add('hidden');
-            const successText = document.getElementById('success-text');
-            successText.innerHTML = `Ваш отзыв о магазине <strong>${state.selectedStore}</strong> принят. <br>Награда в <strong>${state.rewardAmount} ₸</strong> будет начислена после модерации.`;
-            this.successContainer.classList.remove('hidden');
-            
-            // Отправляем форму программно
-            this.form.submit();
+
+            // URL для редиректа теперь включает параметр для отслеживания
+            const redirectInput = document.querySelector('input[name="redirect"]');
+            const baseUrl = window.location.origin + window.location.pathname;
+            redirectInput.value = `${baseUrl}?submission=ok`;
         },
     };
 
