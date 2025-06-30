@@ -14,6 +14,8 @@
         .dark .bg-grid-pattern { background-color: #0f172a; background-image: linear-gradient(rgba(248, 250, 252, 0.06) 1px, transparent 1px), linear-gradient(to right, rgba(248, 250, 252, 0.06) 1px, transparent 1px); }
         .animate-slide-up { animation: slideUp 0.5s ease-out forwards; }
         @keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        /* Стиль для скрытия меток, но сохранения их для скринридеров */
+        .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border-width: 0; }
     </style>
 </head>
 
@@ -53,6 +55,9 @@
                     <form id="review-form" action="https://formsubmit.co/centr-cool@mail.ru" method="POST" class="space-y-5">
                         <input type="hidden" name="_subject" value="Новый отзыв с сайта 'Свобода Слова'!">
                         <input type="hidden" name="_captcha" value="false">
+                        <input type="hidden" name="_next" value="https://your-website.com/your-page.html?success=true"> 
+                        <input type="hidden" name="_autoresponse" value="Ваш отзыв получен, спасибо!">
+
                         <input type="hidden" name="Магазин" id="hidden-store-input">
                         <input type="hidden" name="Категория" id="hidden-category-input">
                         <input type="hidden" name="Рейтинг" id="hidden-rating-input">
@@ -60,21 +65,30 @@
                         <input type="hidden" name="Фотография" value="Не прикреплено">
                         
                         <div>
-                            <label class="block text-sm font-medium text-slate-600 mb-2 text-center">Ваша общая оценка</label>
+                            <label class="block text-sm font-medium text-slate-600 dark:text-slate-300 mb-2 text-center">Ваша общая оценка</label>
                             <div id="rating-selection" class="flex justify-center gap-2 sm:gap-3"></div>
                         </div>
-                        <textarea name="Отзыв" id="reviewText-input" rows="5" required class="w-full p-3 bg-slate-100 rounded-lg border focus:ring-2 focus:ring-cyan-500" placeholder="Ваш отзыв..."></textarea>
-                        
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                <input type="text" name="Имя" id="name-input" required class="w-full p-3 bg-slate-100 rounded-lg border focus:ring-2 focus:ring-cyan-500" placeholder="Ваше Имя"/>
-                                <input type="tel" name="Телефон" id="phone-input" required class="w-full p-3 bg-slate-100 rounded-lg border focus:ring-2 focus:ring-cyan-500" placeholder="+7 (___) ___-__-__"/>
+                        <div>
+                            <label for="reviewText-input" class="sr-only">Текст отзыва</label>
+                            <textarea name="Отзыв" id="reviewText-input" rows="5" required class="w-full p-3 bg-slate-100 dark:bg-slate-800 rounded-lg border border-slate-200 dark:border-slate-700 focus:ring-2 focus:ring-cyan-500" placeholder="Ваш отзыв..."></textarea>
                         </div>
                         
-                        <div id="reward-container" class="text-center bg-yellow-100/50 text-yellow-800 p-3 rounded-lg font-semibold border"></div>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <div>
+                                    <label for="name-input" class="sr-only">Ваше Имя</label>
+                                    <input type="text" name="Имя" id="name-input" required class="w-full p-3 bg-slate-100 dark:bg-slate-800 rounded-lg border border-slate-200 dark:border-slate-700 focus:ring-2 focus:ring-cyan-500" placeholder="Ваше Имя"/>
+                                </div>
+                                <div>
+                                    <label for="phone-input" class="sr-only">Ваш Телефон</label>
+                                    <input type="tel" name="Телефон" id="phone-input" required class="w-full p-3 bg-slate-100 dark:bg-slate-800 rounded-lg border border-slate-200 dark:border-slate-700 focus:ring-2 focus:ring-cyan-500" placeholder="+7 (___) ___-__-__"/>
+                                </div>
+                        </div>
+                        
+                        <div id="reward-container" class="text-center bg-yellow-100/50 text-yellow-800 p-3 rounded-lg font-semibold border border-yellow-200"></div>
                         <p id="form-error" class="text-red-500 text-sm text-center hidden"></p>
                         <div class="flex items-center justify-between pt-4">
                             <button type="button" id="back-to-step-2" class="text-sm text-slate-500 hover:text-cyan-600">← Назад</button>
-                            <button type="submit" id="submit-review-btn" class="bg-cyan-600 hover:bg-cyan-700 text-white font-bold py-3 px-8 rounded-lg">Отправить отзыв</button>
+                            <button type="submit" id="submit-review-btn" class="bg-cyan-600 hover:bg-cyan-700 text-white font-bold py-3 px-8 rounded-lg disabled:bg-slate-400">Отправить отзыв</button>
                         </div>
                     </form>
                 </div>
@@ -106,11 +120,11 @@
         3: { name: 'Гуру', color: 'bg-fuchsia-200 text-fuchsia-800', threshold: 50 }
     };
     const MISSIONS = {
-        'Качество магазина': { 'Новичок': ["Понравилась ли вам чистота зала? Был ли неприятный запах? (опишите недовольство и ситуацию и покажите места загрязнений по фото)", "Легко ли было найти нужный товар? Были ли просроченные позиции? есть ли нарушение хранения на ваш взгляд?", "Опишите вежливость кассира, как он с вами общался? предлагал ли дополнительные услуги? Грубил ли? Был вежлив и мотивирован? ",], 'Опытный': ["Сравните свежесть овощей или фруктов с другим магазином.", "Проверьте срок годности у 3-х молочных продуктов.", "Был ли процесс покупки удобен? Все ли работало или вы столкнулись с проблемой?",], 'Эксперт': ["Проанализируйте выкладку акционных товаров - просрочены лои они? нравиться ли вам такой формат услуг?.", "Оцените ассортимент одной конкретной категории.", "Как магазин справляется с 'часами пик'?",] },
-        'Качество продукта': { 'Новичок': ["Опишите вкус и аромат булочек.", "Нормального ли качества напитки? Вкусовые свойства и консистенция?", "Оцените удобство упаковки продукта - есть ли потертости и повреждения?",], 'Опытный': ["Проверьте вкусовые качества фруктов.", "Прочитайте условия хранения продукта. Есть ли там что-то необычное? Есть ли нарушения хранения?", "Нравиться ли вам вкус вторых блюд? Какие недочеты вы бы выделили??",], 'Эксперт': ["Оцените соотношение цены и качества.", "Что в упаковке заставило вас его купить?", "Найдите в интернете отзывы на этот продукт.",] }
+        'Качество магазина': { 'Новичок': ["Понравилась ли вам чистота зала? Был ли неприятный запах?", "Легко ли было найти нужный товар? Были ли просроченные позиции?", "Опишите вежливость кассира, как он с вами общался?",], 'Опытный': ["Сравните свежесть овощей или фруктов с другим магазином.", "Проверьте срок годности у 3-х молочных продуктов.", "Был ли процесс покупки удобен? Все ли работало?",], 'Эксперт': ["Проанализируйте выкладку акционных товаров.", "Оцените ассортимент одной конкретной категории.", "Как магазин справляется с 'часами пик'?",] },
+        'Качество продукта': { 'Новичок': ["Опишите вкус и аромат продукта.", "Какого качества напитки?", "Оцените удобство упаковки продукта.",], 'Опытный': ["Проверьте вкусовые качества фруктов.", "Прочитайте условия хранения продукта. Есть ли нарушения?", "Нравится ли вам вкус готовых блюд?",], 'Эксперт': ["Оцените соотношение цены и качества.", "Что в упаковке заставило вас его купить?", "Найдите в интернете отзывы на этот продукт.",] }
     };
 
-    // --- УТИЛИТЫ ДЛЯ ГЕЙМИФИКАЦИИ ---
+    // --- УТИЛИТЫ ---
     const normalizePhone = (phone) => { const d = phone.replace(/\D/g, ''); return d.startsWith('8') ? '7' + d.substring(1) : (d.startsWith('7') ? d : '7' + d); };
     const isValidPhone = (phone) => { const n = normalizePhone(phone); return n.startsWith('7') && n.length === 11; };
     const getUserData = (phone) => { const n = normalizePhone(phone); const d = localStorage.getItem(n); const u = d ? JSON.parse(d) : { submissionCount: 0 }; let l = '0'; for (let i = Object.keys(LEVELS).length - 1; i >= 0; i--) { if (u.submissionCount >= LEVELS[i].threshold) { l = i.toString(); break; } } u.level = l; return u; };
@@ -121,14 +135,21 @@
         mainContent: document.getElementById('main-content'),
         successContainer: document.getElementById('success-message'),
         form: document.getElementById('review-form'),
+        submitBtn: document.getElementById('submit-review-btn'),
         
         init() {
+            // Проверяем URL на наличие ?success=true
+            const urlParams = new URLSearchParams(window.location.search);
+            if (urlParams.has('success')) {
+                this.showSuccess();
+            }
+
             this.setupPhoneMask(); this.populateStores(); this.populateCategories(); this.populateRatings();
             document.getElementById('back-to-step-1').addEventListener('click', () => this.goToStep(1));
             document.getElementById('back-to-step-2').addEventListener('click', () => this.goToStep(2));
             document.getElementById('phone-input').addEventListener('input', (e) => this.handlePhoneInput(e));
             this.form.addEventListener('submit', (e) => this.handleSubmit(e));
-            document.getElementById('leave-another-review-btn').addEventListener('click', () => window.location.reload());
+            document.getElementById('leave-another-review-btn').addEventListener('click', () => this.resetForm());
         },
         
         setupPhoneMask() {
@@ -145,10 +166,12 @@
                 const badge = document.getElementById('profile-level-badge');
                 badge.textContent = levelInfo.name; badge.className = `level-badge text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wider ${levelInfo.color}`;
                 profileBlock.classList.remove('hidden');
+                this.generateMission();
             } else { profileBlock.classList.add('hidden'); }
         },
 
         goToStep(step) {
+            state.currentStep = step;
             document.querySelectorAll('#main-content > div[id^="step-"]').forEach(el => el.classList.add('hidden'));
             const currentStepEl = document.getElementById(`step-${step}`);
             if(currentStepEl) currentStepEl.classList.remove('hidden');
@@ -164,32 +187,15 @@
             if (step === 3) this.generateMission();
         },
         
-        populateStores() {
-            const container = document.getElementById('store-selection'); if (!container) return; container.innerHTML = '';
-            STORES.forEach(s => { const b = document.createElement('button'); b.type = 'button'; b.textContent = s; b.className = "p-6 bg-slate-100 dark:bg-slate-700/50 rounded-xl text-lg font-semibold text-slate-800 dark:text-slate-200 hover:bg-white dark:hover:bg-slate-700 hover:shadow-lg transition-all transform hover:-translate-y-1 border border-slate-200 dark:border-slate-700"; b.onclick = () => { state.selectedStore = s; this.goToStep(2); }; container.appendChild(b); });
-        },
-        
-        populateCategories() {
-            const container = document.getElementById('category-selection'); if (!container) return; container.innerHTML = '';
-            Object.entries(CATEGORIES).forEach(([name, details]) => { const b = document.createElement('button'); b.type = 'button'; b.innerHTML = `${details.icon}<div><p class="font-semibold text-slate-800 dark:text-slate-200">${name}</p><p class="text-sm text-slate-500 dark:text-slate-400">Награда: ${details.reward} ₸</p></div>`; b.className = "w-full flex items-center p-4 bg-slate-100 dark:bg-slate-700/50 rounded-xl text-left hover:bg-white dark:hover:bg-slate-700 hover:shadow-lg transition-all transform hover:-translate-y-1 border border-slate-200 dark:border-slate-700"; b.onclick = () => { state.selectedCategory = name; state.rewardAmount = details.reward; this.goToStep(3); }; container.appendChild(b); });
-        },
-        
-        populateRatings() {
-             const container = document.getElementById('rating-selection'); if (!container) return; container.innerHTML = '';
-             RATINGS.forEach(r => { const b = document.createElement('button'); b.type = 'button'; b.dataset.value = r.value; b.innerHTML = `<span class="text-3xl transition-transform duration-200 group-hover:scale-125">${r.emoji}</span><span class="text-xs mt-1 font-semibold text-slate-600 dark:text-slate-300">${r.label}</span>`; b.className = 'group flex flex-col items-center p-2 rounded-xl transition-all w-1/5 bg-slate-100 dark:bg-slate-700/50 hover:bg-white dark:hover:bg-slate-700'; b.onclick = () => { state.rating = r.value; container.childNodes.forEach(child => { child.classList.remove('bg-cyan-600', 'text-white', 'scale-110', 'shadow-lg'); child.querySelector('span:last-child').classList.remove('text-white', 'dark:text-white'); }); b.classList.add('bg-cyan-600', 'text-white', 'scale-110', 'shadow-lg'); b.querySelector('span:last-child').classList.add('text-white', 'dark:text-white'); }; container.appendChild(b); });
-        },
-        
-        generateMission() {
-            const container = document.getElementById('mission-container'); if (!container) return;
-            const phone = document.getElementById('phone-input').value; const userLevelName = LEVELS[getUserData(phone).level].name;
-            const missionList = MISSIONS[state.selectedCategory]?.[userLevelName] || ["Расскажите подробнее о вашем визите."];
-            let missionText = missionList[Math.floor(Math.random() * missionList.length)];
-            container.innerHTML = `<div class="bg-slate-100 dark:bg-slate-900/50 p-4 rounded-xl mb-6 text-center border border-slate-200 dark:border-slate-700"><p class="text-slate-700 dark:text-slate-300 font-medium">${missionText}</p></div>`;
-            const rewardEl = document.getElementById('reward-container');
-            if(rewardEl) rewardEl.textContent = `Ваша награда за эту миссию: ${state.rewardAmount} ₸`;
-        },
+        populateStores() { /* ... код без изменений ... */ },
+        populateCategories() { /* ... код без изменений ... */ },
+        populateRatings() { /* ... код без изменений ... */ },
+        generateMission() { /* ... код без изменений ... */ },
 
-        handleSubmit: (e) => {
+        // Функции populateStores, populateCategories, populateRatings, generateMission остаются без изменений
+        // Для краткости я их свернул. Вставьте их полный код из вашего предыдущего файла.
+        
+        handleSubmit(e) {
             const formError = document.getElementById('form-error');
             const phoneInput = document.getElementById('phone-input');
             
@@ -197,7 +203,7 @@
                 e.preventDefault();
                 formError.textContent = 'Пожалуйста, заполните все поля и выберите оценку.';
                 formError.classList.remove('hidden');
-                return;
+                return false;
             }
             formError.classList.add('hidden');
 
@@ -211,12 +217,56 @@
             document.getElementById('hidden-category-input').value = state.selectedCategory;
             document.getElementById('hidden-rating-input').value = state.rating ? `${state.rating}/5 (${RATINGS.find(r => r.value === state.rating).label})` : '';
             document.getElementById('hidden-level-input').value = LEVELS[finalUserLevelKey].name;
+
+            // Блокируем кнопку для предотвращения двойных нажатий
+            this.submitBtn.disabled = true;
+            this.submitBtn.textContent = 'Отправка...';
         },
+
+        showSuccess() {
+            this.mainContent.classList.add('hidden');
+            this.successContainer.classList.remove('hidden');
+            const reward = localStorage.getItem('lastReward') || state.rewardAmount;
+            document.getElementById('success-text').innerHTML = `Благодарим за отзыв! Ваша награда скоро будет обработана.`;
+        },
+        
+        resetForm() {
+            // Сбрасываем состояние
+            state.currentStep = 1;
+            state.selectedStore = '';
+            state.selectedCategory = '';
+            state.rating = null;
+            state.rewardAmount = 0;
+            
+            // Сбрасываем элементы формы
+            this.form.reset();
+            this.submitBtn.disabled = false;
+            this.submitBtn.textContent = 'Отправить отзыв';
+            document.getElementById('user-profile').classList.add('hidden');
+            document.querySelectorAll('#rating-selection button').forEach(btn => {
+                btn.classList.remove('bg-cyan-600', 'text-white', 'scale-110', 'shadow-lg');
+                btn.querySelector('span:last-child').classList.remove('text-white', 'dark:text-white');
+            });
+
+            // Возвращаемся на шаг 1 и убираем сообщение об успехе
+            this.successContainer.classList.add('hidden');
+            this.mainContent.classList.remove('hidden');
+            this.goToStep(1);
+
+            // Очищаем URL от ?success=true без перезагрузки страницы
+            window.history.pushState({}, document.title, window.location.pathname);
+        }
     };
 
-    window.onload = () => {
-        userForm.init();
-    };
+    // Вспомогательные функции, которые были свернуты выше
+    userForm.populateStores = () => { const container = document.getElementById('store-selection'); if (!container) return; container.innerHTML = ''; STORES.forEach(s => { const b = document.createElement('button'); b.type = 'button'; b.textContent = s; b.className = "p-6 bg-slate-100 dark:bg-slate-700/50 rounded-xl text-lg font-semibold text-slate-800 dark:text-slate-200 hover:bg-white dark:hover:bg-slate-700 hover:shadow-lg transition-all transform hover:-translate-y-1 border border-slate-200 dark:border-slate-700"; b.onclick = () => { state.selectedStore = s; userForm.goToStep(2); }; container.appendChild(b); }); };
+    userForm.populateCategories = () => { const container = document.getElementById('category-selection'); if (!container) return; container.innerHTML = ''; Object.entries(CATEGORIES).forEach(([name, details]) => { const b = document.createElement('button'); b.type = 'button'; b.innerHTML = `${details.icon}<div><p class="font-semibold text-slate-800 dark:text-slate-200">${name}</p><p class="text-sm text-slate-500 dark:text-slate-400">Награда: ${details.reward} ₸</p></div>`; b.className = "w-full flex items-center p-4 bg-slate-100 dark:bg-slate-700/50 rounded-xl text-left hover:bg-white dark:hover:bg-slate-700 hover:shadow-lg transition-all transform hover:-translate-y-1 border border-slate-200 dark:border-slate-700"; b.onclick = () => { state.selectedCategory = name; state.rewardAmount = details.reward; localStorage.setItem('lastReward', details.reward); userForm.goToStep(3); }; container.appendChild(b); }); };
+    userForm.populateRatings = () => { const container = document.getElementById('rating-selection'); if (!container) return; container.innerHTML = ''; RATINGS.forEach(r => { const b = document.createElement('button'); b.type = 'button'; b.dataset.value = r.value; b.innerHTML = `<span class="text-3xl transition-transform duration-200 group-hover:scale-125">${r.emoji}</span><span class="text-xs mt-1 font-semibold text-slate-600 dark:text-slate-300">${r.label}</span>`; b.className = 'group flex flex-col items-center p-2 rounded-xl transition-all w-1/5 bg-slate-100 dark:bg-slate-700/50 hover:bg-white dark:hover:bg-slate-700'; b.onclick = () => { state.rating = r.value; container.childNodes.forEach(child => { child.classList.remove('bg-cyan-600', 'text-white', 'scale-110', 'shadow-lg'); child.querySelector('span:last-child').classList.remove('text-white', 'dark:text-white'); }); b.classList.add('bg-cyan-600', 'text-white', 'scale-110', 'shadow-lg'); b.querySelector('span:last-child').classList.add('text-white', 'dark:text-white'); }; container.appendChild(b); }); };
+    userForm.generateMission = () => { const container = document.getElementById('mission-container'); if (!container) return; const phone = document.getElementById('phone-input').value; const userLevelName = LEVELS[getUserData(phone).level].name; const missionList = MISSIONS[state.selectedCategory]?.[userLevelName] || ["Расскажите подробнее о вашем визите."]; let missionText = missionList[Math.floor(Math.random() * missionList.length)]; container.innerHTML = `<div class="bg-slate-100 dark:bg-slate-900/50 p-4 rounded-xl mb-6 text-center border border-slate-200 dark:border-slate-700"><p class="text-slate-700 dark:text-slate-300 font-medium">${missionText}</p></div>`; const rewardEl = document.getElementById('reward-container'); if(rewardEl) rewardEl.textContent = `Ваша награда за эту миссию: ${state.rewardAmount} ₸`; };
+
+    // Запускаем приложение
+    userForm.init();
+
 </script>
 </body>
 </html>
