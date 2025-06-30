@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="ru">
 
@@ -55,9 +56,8 @@
                     <form id="review-form" action="https://formsubmit.co/centr-cool@mail.ru" method="POST" class="space-y-5">
                         <input type="hidden" name="_subject" value="Новый отзыв с сайта 'Свобода Слова'!">
                         <input type="hidden" name="_captcha" value="false">
-                        <input type="hidden" name="_next" value="https://your-website.com/your-page.html?success=true"> 
-                        <input type="hidden" name="_autoresponse" value="Ваш отзыв получен, спасибо!">
-
+                        <input type="hidden" name="_next" value="https://magazineotz.netlify.app/?success=true"> 
+                        
                         <input type="hidden" name="Магазин" id="hidden-store-input">
                         <input type="hidden" name="Категория" id="hidden-category-input">
                         <input type="hidden" name="Рейтинг" id="hidden-rating-input">
@@ -138,13 +138,18 @@
         submitBtn: document.getElementById('submit-review-btn'),
         
         init() {
-            // Проверяем URL на наличие ?success=true
+            // Проверяем URL на наличие ?success=true для отображения сообщения об успехе
             const urlParams = new URLSearchParams(window.location.search);
             if (urlParams.has('success')) {
                 this.showSuccess();
             }
 
-            this.setupPhoneMask(); this.populateStores(); this.populateCategories(); this.populateRatings();
+            this.setupPhoneMask(); 
+            this.populateStores(); 
+            this.populateCategories(); 
+            this.populateRatings();
+            
+            // Назначаем обработчики событий
             document.getElementById('back-to-step-1').addEventListener('click', () => this.goToStep(1));
             document.getElementById('back-to-step-2').addEventListener('click', () => this.goToStep(2));
             document.getElementById('phone-input').addEventListener('input', (e) => this.handlePhoneInput(e));
@@ -158,16 +163,21 @@
         },
 
         handlePhoneInput(e) {
-            const phone = e.target.value; const profileBlock = document.getElementById('user-profile');
+            const phone = e.target.value; 
+            const profileBlock = document.getElementById('user-profile');
             if (isValidPhone(phone)) {
-                const userData = getUserData(phone); const levelInfo = LEVELS[userData.level];
+                const userData = getUserData(phone); 
+                const levelInfo = LEVELS[userData.level];
                 document.getElementById('profile-phone').textContent = e.target.value;
                 document.getElementById('profile-count').textContent = userData.submissionCount;
                 const badge = document.getElementById('profile-level-badge');
-                badge.textContent = levelInfo.name; badge.className = `level-badge text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wider ${levelInfo.color}`;
+                badge.textContent = levelInfo.name; 
+                badge.className = `level-badge text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wider ${levelInfo.color}`;
                 profileBlock.classList.remove('hidden');
                 this.generateMission();
-            } else { profileBlock.classList.add('hidden'); }
+            } else { 
+                profileBlock.classList.add('hidden'); 
+            }
         },
 
         goToStep(step) {
@@ -176,29 +186,102 @@
             const currentStepEl = document.getElementById(`step-${step}`);
             if(currentStepEl) currentStepEl.classList.remove('hidden');
             for (let i = 1; i <= 3; i++) {
-                const indicator = document.getElementById(`step-indicator-${i}`); const lineDiv = document.getElementById(`step-line-${i-1}`);
+                const indicator = document.getElementById(`step-indicator-${i}`); 
+                const lineDiv = document.getElementById(`step-line-${i-1}`);
                 if (indicator) {
-                    if (i < step) { indicator.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" /></svg>`; indicator.classList.add('bg-cyan-600', 'text-white'); }
-                    else if (i == step) { indicator.innerHTML = i; indicator.classList.add('bg-cyan-600', 'text-white'); indicator.classList.remove('bg-slate-200', 'text-slate-500'); }
-                    else { indicator.innerHTML = i; indicator.classList.remove('bg-cyan-600', 'text-white'); indicator.classList.add('bg-slate-200', 'text-slate-500'); }
+                    if (i < step) { 
+                        indicator.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" /></svg>`; 
+                        indicator.classList.add('bg-cyan-600', 'text-white'); 
+                    } else if (i == step) { 
+                        indicator.innerHTML = i; 
+                        indicator.classList.add('bg-cyan-600', 'text-white'); 
+                        indicator.classList.remove('bg-slate-200', 'text-slate-500'); 
+                    } else { 
+                        indicator.innerHTML = i; 
+                        indicator.classList.remove('bg-cyan-600', 'text-white'); 
+                        indicator.classList.add('bg-slate-200', 'text-slate-500'); 
+                    }
                 }
-                if (lineDiv) { if (i < step) { lineDiv.style.width = '100%'; } else { lineDiv.style.width = '0%'; } }
+                if (lineDiv) { 
+                    if (i < step) { lineDiv.style.width = '100%'; } else { lineDiv.style.width = '0%'; } 
+                }
             }
             if (step === 3) this.generateMission();
         },
         
-        populateStores() { /* ... код без изменений ... */ },
-        populateCategories() { /* ... код без изменений ... */ },
-        populateRatings() { /* ... код без изменений ... */ },
-        generateMission() { /* ... код без изменений ... */ },
-
-        // Функции populateStores, populateCategories, populateRatings, generateMission остаются без изменений
-        // Для краткости я их свернул. Вставьте их полный код из вашего предыдущего файла.
+        populateStores: () => { 
+            const container = document.getElementById('store-selection'); 
+            if (!container) return; 
+            container.innerHTML = ''; 
+            STORES.forEach(s => { 
+                const b = document.createElement('button'); 
+                b.type = 'button'; 
+                b.textContent = s; 
+                b.className = "p-6 bg-slate-100 dark:bg-slate-700/50 rounded-xl text-lg font-semibold text-slate-800 dark:text-slate-200 hover:bg-white dark:hover:bg-slate-700 hover:shadow-lg transition-all transform hover:-translate-y-1 border border-slate-200 dark:border-slate-700"; 
+                b.onclick = () => { state.selectedStore = s; userForm.goToStep(2); }; 
+                container.appendChild(b); 
+            }); 
+        },
+        
+        populateCategories: () => { 
+            const container = document.getElementById('category-selection'); 
+            if (!container) return; 
+            container.innerHTML = ''; 
+            Object.entries(CATEGORIES).forEach(([name, details]) => { 
+                const b = document.createElement('button'); 
+                b.type = 'button'; 
+                b.innerHTML = `${details.icon}<div><p class="font-semibold text-slate-800 dark:text-slate-200">${name}</p><p class="text-sm text-slate-500 dark:text-slate-400">Награда: ${details.reward} ₸</p></div>`; 
+                b.className = "w-full flex items-center p-4 bg-slate-100 dark:bg-slate-700/50 rounded-xl text-left hover:bg-white dark:hover:bg-slate-700 hover:shadow-lg transition-all transform hover:-translate-y-1 border border-slate-200 dark:border-slate-700"; 
+                b.onclick = () => { 
+                    state.selectedCategory = name; 
+                    state.rewardAmount = details.reward; 
+                    localStorage.setItem('lastReward', details.reward); 
+                    userForm.goToStep(3); 
+                }; 
+                container.appendChild(b); 
+            }); 
+        },
+        
+        populateRatings: () => { 
+            const container = document.getElementById('rating-selection'); 
+            if (!container) return; 
+            container.innerHTML = ''; 
+            RATINGS.forEach(r => { 
+                const b = document.createElement('button'); 
+                b.type = 'button'; 
+                b.dataset.value = r.value; 
+                b.innerHTML = `<span class="text-3xl transition-transform duration-200 group-hover:scale-125">${r.emoji}</span><span class="text-xs mt-1 font-semibold text-slate-600 dark:text-slate-300">${r.label}</span>`; 
+                b.className = 'group flex flex-col items-center p-2 rounded-xl transition-all w-1/5 bg-slate-100 dark:bg-slate-700/50 hover:bg-white dark:hover:bg-slate-700'; 
+                b.onclick = () => { 
+                    state.rating = r.value; 
+                    container.childNodes.forEach(child => { 
+                        child.classList.remove('bg-cyan-600', 'text-white', 'scale-110', 'shadow-lg'); 
+                        child.querySelector('span:last-child').classList.remove('text-white', 'dark:text-white'); 
+                    }); 
+                    b.classList.add('bg-cyan-600', 'text-white', 'scale-110', 'shadow-lg'); 
+                    b.querySelector('span:last-child').classList.add('text-white', 'dark:text-white'); 
+                }; 
+                container.appendChild(b); 
+            }); 
+        },
+        
+        generateMission: () => { 
+            const container = document.getElementById('mission-container'); 
+            if (!container) return; 
+            const phone = document.getElementById('phone-input').value; 
+            const userLevelName = isValidPhone(phone) ? LEVELS[getUserData(phone).level].name : 'Новичок';
+            const missionList = MISSIONS[state.selectedCategory]?.[userLevelName] || ["Расскажите подробнее о вашем визите."]; 
+            let missionText = missionList[Math.floor(Math.random() * missionList.length)]; 
+            container.innerHTML = `<div class="bg-slate-100 dark:bg-slate-900/50 p-4 rounded-xl mb-6 text-center border border-slate-200 dark:border-slate-700"><p class="text-slate-700 dark:text-slate-300 font-medium">${missionText}</p></div>`; 
+            const rewardEl = document.getElementById('reward-container'); 
+            if(rewardEl) rewardEl.textContent = `Ваша награда за эту миссию: ${state.rewardAmount} ₸`; 
+        },
         
         handleSubmit(e) {
             const formError = document.getElementById('form-error');
             const phoneInput = document.getElementById('phone-input');
             
+            // Простая валидация
             if (!isValidPhone(phoneInput.value) || !state.rating) {
                 e.preventDefault();
                 formError.textContent = 'Пожалуйста, заполните все поля и выберите оценку.';
@@ -207,12 +290,14 @@
             }
             formError.classList.add('hidden');
 
+            // Сохранение данных пользователя
             const normalizedPhone = normalizePhone(phoneInput.value);
             const userData = getUserData(normalizedPhone);
             userData.submissionCount += 1;
             saveUserData(normalizedPhone, userData);
             const finalUserLevelKey = getUserData(normalizedPhone).level;
 
+            // Заполнение скрытых полей перед отправкой
             document.getElementById('hidden-store-input').value = state.selectedStore;
             document.getElementById('hidden-category-input').value = state.selectedCategory;
             document.getElementById('hidden-rating-input').value = state.rating ? `${state.rating}/5 (${RATINGS.find(r => r.value === state.rating).label})` : '';
@@ -226,19 +311,20 @@
         showSuccess() {
             this.mainContent.classList.add('hidden');
             this.successContainer.classList.remove('hidden');
-            const reward = localStorage.getItem('lastReward') || state.rewardAmount;
-            document.getElementById('success-text').innerHTML = `Благодарим за отзыв! Ваша награда скоро будет обработана.`;
+            const reward = localStorage.getItem('lastReward') || '...';
+            document.getElementById('success-text').innerHTML = `Благодарим за отзыв! Ваша награда в размере ${reward} ₸ будет обработана в ближайшее время.`;
         },
         
         resetForm() {
-            // Сбрасываем состояние
+            // Сброс состояния в JavaScript
             state.currentStep = 1;
             state.selectedStore = '';
             state.selectedCategory = '';
             state.rating = null;
             state.rewardAmount = 0;
+            localStorage.removeItem('lastReward');
             
-            // Сбрасываем элементы формы
+            // Визуальный сброс элементов формы
             this.form.reset();
             this.submitBtn.disabled = false;
             this.submitBtn.textContent = 'Отправить отзыв';
@@ -248,7 +334,7 @@
                 btn.querySelector('span:last-child').classList.remove('text-white', 'dark:text-white');
             });
 
-            // Возвращаемся на шаг 1 и убираем сообщение об успехе
+            // Возвращаемся на шаг 1 и скрываем сообщение об успехе
             this.successContainer.classList.add('hidden');
             this.mainContent.classList.remove('hidden');
             this.goToStep(1);
@@ -258,13 +344,7 @@
         }
     };
 
-    // Вспомогательные функции, которые были свернуты выше
-    userForm.populateStores = () => { const container = document.getElementById('store-selection'); if (!container) return; container.innerHTML = ''; STORES.forEach(s => { const b = document.createElement('button'); b.type = 'button'; b.textContent = s; b.className = "p-6 bg-slate-100 dark:bg-slate-700/50 rounded-xl text-lg font-semibold text-slate-800 dark:text-slate-200 hover:bg-white dark:hover:bg-slate-700 hover:shadow-lg transition-all transform hover:-translate-y-1 border border-slate-200 dark:border-slate-700"; b.onclick = () => { state.selectedStore = s; userForm.goToStep(2); }; container.appendChild(b); }); };
-    userForm.populateCategories = () => { const container = document.getElementById('category-selection'); if (!container) return; container.innerHTML = ''; Object.entries(CATEGORIES).forEach(([name, details]) => { const b = document.createElement('button'); b.type = 'button'; b.innerHTML = `${details.icon}<div><p class="font-semibold text-slate-800 dark:text-slate-200">${name}</p><p class="text-sm text-slate-500 dark:text-slate-400">Награда: ${details.reward} ₸</p></div>`; b.className = "w-full flex items-center p-4 bg-slate-100 dark:bg-slate-700/50 rounded-xl text-left hover:bg-white dark:hover:bg-slate-700 hover:shadow-lg transition-all transform hover:-translate-y-1 border border-slate-200 dark:border-slate-700"; b.onclick = () => { state.selectedCategory = name; state.rewardAmount = details.reward; localStorage.setItem('lastReward', details.reward); userForm.goToStep(3); }; container.appendChild(b); }); };
-    userForm.populateRatings = () => { const container = document.getElementById('rating-selection'); if (!container) return; container.innerHTML = ''; RATINGS.forEach(r => { const b = document.createElement('button'); b.type = 'button'; b.dataset.value = r.value; b.innerHTML = `<span class="text-3xl transition-transform duration-200 group-hover:scale-125">${r.emoji}</span><span class="text-xs mt-1 font-semibold text-slate-600 dark:text-slate-300">${r.label}</span>`; b.className = 'group flex flex-col items-center p-2 rounded-xl transition-all w-1/5 bg-slate-100 dark:bg-slate-700/50 hover:bg-white dark:hover:bg-slate-700'; b.onclick = () => { state.rating = r.value; container.childNodes.forEach(child => { child.classList.remove('bg-cyan-600', 'text-white', 'scale-110', 'shadow-lg'); child.querySelector('span:last-child').classList.remove('text-white', 'dark:text-white'); }); b.classList.add('bg-cyan-600', 'text-white', 'scale-110', 'shadow-lg'); b.querySelector('span:last-child').classList.add('text-white', 'dark:text-white'); }; container.appendChild(b); }); };
-    userForm.generateMission = () => { const container = document.getElementById('mission-container'); if (!container) return; const phone = document.getElementById('phone-input').value; const userLevelName = LEVELS[getUserData(phone).level].name; const missionList = MISSIONS[state.selectedCategory]?.[userLevelName] || ["Расскажите подробнее о вашем визите."]; let missionText = missionList[Math.floor(Math.random() * missionList.length)]; container.innerHTML = `<div class="bg-slate-100 dark:bg-slate-900/50 p-4 rounded-xl mb-6 text-center border border-slate-200 dark:border-slate-700"><p class="text-slate-700 dark:text-slate-300 font-medium">${missionText}</p></div>`; const rewardEl = document.getElementById('reward-container'); if(rewardEl) rewardEl.textContent = `Ваша награда за эту миссию: ${state.rewardAmount} ₸`; };
-
-    // Запускаем приложение
+    // Запускаем приложение при загрузке страницы
     userForm.init();
 
 </script>
