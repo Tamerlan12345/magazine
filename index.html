@@ -1,465 +1,233 @@
- <!DOCTYPE html>
-
+<!DOCTYPE html>
 <html lang="ru">
 
-
-
 <head>
-
-    <meta charset="UTF-8">
-
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-    <title>Свобода Слова - Отзывы</title>
-
-    <script src="https://cdn.tailwindcss.com"></script>
-
-    <script src="https://ucarecdn.com/libs/widget/3.x/uploadcare.full.min.js" charset="utf-8"></script>
-
-    <script src="https://unpkg.com/imask"></script>
-
-    <style>
-
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap');
-
-        body { font-family: 'Inter', sans-serif; -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; }
-
-        .bg-grid-pattern { background-color: #f8fafc; background-image: linear-gradient(rgba(15, 23, 42, 0.04) 1px, transparent 1px), linear-gradient(to right, rgba(15, 23, 42, 0.04) 1px, transparent 1px); background-size: 24px 24px; }
-
-        .dark .bg-grid-pattern { background-color: #0f172a; background-image: linear-gradient(rgba(248, 250, 252, 0.06) 1px, transparent 1px), linear-gradient(to right, rgba(248, 250, 252, 0.06) 1px, transparent 1px); }
-
-        .animate-slide-up { animation: slideUp 0.5s ease-out forwards; }
-
-        @keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
-
-        .uploadcare--widget__button_type_open { transition: all 0.2s ease-in-out; }
-
-        .uploadcare--widget__button_type_open:focus { box-shadow: 0 0 0 3px rgba(14, 165, 233, 0.4); }
-
-    </style>
-
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Свобода Слова - Отзывы</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://ucarecdn.com/libs/widget/3.x/uploadcare.full.min.js" charset="utf-8"></script>
+    <script src="https://unpkg.com/imask"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap');
+        body { font-family: 'Inter', sans-serif; -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; }
+        .bg-grid-pattern { background-color: #f8fafc; background-image: linear-gradient(rgba(15, 23, 42, 0.04) 1px, transparent 1px), linear-gradient(to right, rgba(15, 23, 42, 0.04) 1px, transparent 1px); background-size: 24px 24px; }
+        .dark .bg-grid-pattern { background-color: #0f172a; background-image: linear-gradient(rgba(248, 250, 252, 0.06) 1px, transparent 1px), linear-gradient(to right, rgba(248, 250, 252, 0.06) 1px, transparent 1px); }
+        .animate-slide-up { animation: slideUp 0.5s ease-out forwards; }
+        @keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        .uploadcare--widget__button_type_open { transition: all 0.2s ease-in-out; }
+        .uploadcare--widget__button_type_open:focus { box-shadow: 0 0 0 3px rgba(14, 165, 233, 0.4); }
+    </style>
 </head>
 
-
-
 <body class="bg-slate-50 dark:bg-slate-900 min-h-screen w-full flex items-center justify-center p-4 antialiased bg-grid-pattern">
-
-    <div id="app-container" class="w-full">
-
-        <div class="w-full max-w-2xl mx-auto bg-white/80 dark:bg-slate-800/80 backdrop-blur-xl rounded-2xl shadow-2xl p-6 sm:p-8 relative border border-slate-200 dark:border-slate-700">
-
-            
-
-            <div id="main-content">
-
-                <div class="text-center mb-6">
-
-                    <h1 class="text-4xl font-extrabold text-slate-800 dark:text-white tracking-tight">Свобода Слова</h1>
-
-                    <p class="text-slate-500 dark:text-slate-400 mt-2">Оставляйте отзывы, повышайте уровень и получайте больше наград!</p>
-
-                </div>
-
-
-
-                <div class="flex justify-center items-center mb-8 space-x-2">
-
-                    <div id="step-indicator-1" class="w-9 h-9 rounded-full flex items-center justify-center font-bold text-lg transition-all duration-300 bg-cyan-600 text-white shadow-lg">1</div>
-
-                    <div class="h-1 flex-1 rounded-full bg-slate-200"><div id="step-line-1" class="h-1 rounded-full bg-cyan-600 w-0 transition-all duration-500"></div></div>
-
-                    <div id="step-indicator-2" class="w-9 h-9 rounded-full flex items-center justify-center font-bold text-lg transition-all duration-300 bg-slate-200 text-slate-500">2</div>
-
-                    <div class="h-1 flex-1 rounded-full bg-slate-200"><div id="step-line-2" class="h-1 rounded-full bg-cyan-600 w-0 transition-all duration-500"></div></div>
-
-                    <div id="step-indicator-3" class="w-9 h-9 rounded-full flex items-center justify-center font-bold text-lg transition-all duration-300 bg-slate-200 text-slate-500">3</div>
-
-                </div>
-
-
-
-                <div id="step-1" class="animate-slide-up"><h2 class="font-bold text-xl text-center text-slate-800 dark:text-slate-200 mb-6">Шаг 1: Выберите магазин</h2><div id="store-selection" class="grid grid-cols-1 sm:grid-cols-3 gap-4"></div></div>
-
-                <div id="step-2" class="hidden animate-slide-up"><h2 class="font-bold text-xl text-center text-slate-800 dark:text-slate-200 mb-6">Шаг 2: Выберите категорию отзыва</h2><div id="category-selection" class="space-y-4"></div><button id="back-to-step-1" class="mt-6 text-sm text-slate-500 hover:text-cyan-600 transition-colors">← Назад к выбору магазина</button></div>
-
-
-
-                <div id="step-3" class="hidden animate-slide-up">
-
-                    <h2 class="font-bold text-xl text-center text-slate-800 mb-2">Шаг 3: Ваша миссия и оценка</h2>
-
-                    <div id="user-profile" class="hidden my-4 p-3 bg-slate-100 rounded-lg text-center border">
-
-                        <p class="text-sm text-slate-600">Профиль: <strong id="profile-phone" class="font-semibold text-slate-800"></strong></p>
-
-                        <div class="flex items-center justify-center gap-3 mt-2">
-
-                            <span id="profile-level-badge" class="level-badge text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wider"></span>
-
-                            <span class="text-xs text-slate-500">|</span>
-
-                            <span class="text-xs text-slate-500">Отзывов: <strong id="profile-count" class="font-bold text-slate-700"></strong></span>
-
-                        </div>
-
-                    </div>
-
-                    <div id="mission-container"></div>
-
-                    
-
-                    <form id="review-form" action="https://formsubmit.co/daurmb@gmail.com" method="POST" enctype="multipart/form-data" class="space-y-5">
-
-                        <input type="hidden" name="_subject" value="Новый отзыв с сайта 'Свобода Слова'!">
-
-                        <input type="hidden" name="_captcha" value="false">
-
-                        <input type="hidden" name="Магазин" id="hidden-store-input">
-
-                        <input type="hidden" name="Категория" id="hidden-category-input">
-
-                        <input type="hidden" name="Рейтинг" id="hidden-rating-input">
-
-                        <input type="hidden" name="Уровень_пользователя" id="hidden-level-input">
-
-                        
-
-                        <div>
-
-                            <label class="block text-sm font-medium text-slate-600 mb-2 text-center">Ваша общая оценка</label>
-
-                            <div id="rating-selection" class="flex justify-center gap-2 sm:gap-3"></div>
-
-                        </div>
-
-                        <textarea name="Отзыв" id="reviewText-input" rows="5" required class="w-full p-3 bg-slate-100 rounded-lg border focus:ring-2 focus:ring-cyan-500"></textarea>
-
-                        
-
-                        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-
-                             <input type="text" name="Имя" id="name-input" required class="w-full p-3 bg-slate-100 rounded-lg border focus:ring-2 focus:ring-cyan-500" placeholder="Ваше Имя"/>
-
-                             <input type="tel" name="Телефон" id="phone-input" required class="w-full p-3 bg-slate-100 rounded-lg border focus:ring-2 focus:ring-cyan-500" placeholder="+7 (___) ___-__-__"/>
-
-                             <input type="email" name="email" id="email-input" required class="w-full p-3 bg-slate-100 rounded-lg border focus:ring-2 focus:ring-cyan-500" placeholder="Ваш Email (для ответа)"/>
-
-                        </div>
-
-                        
-
-                        <div class="mt-1 text-center">
-
-                            <label class="block text-sm font-medium text-slate-600 mb-2">Загрузите фото</label>
-
-                            <input name="attachment" id="file-upload" type="file" accept="image/*" required class="block w-full text-sm text-slate-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-cyan-50 file:text-cyan-700 hover:file:bg-cyan-100"/>
-
-                        </div>
-
-
-
-                        <div id="reward-container" class="text-center bg-yellow-100/50 text-yellow-800 p-3 rounded-lg font-semibold border"></div>
-
-                        <p id="form-error" class="text-red-500 text-sm text-center hidden"></p>
-
-                        <div class="flex items-center justify-between pt-4">
-
-                            <button type="button" id="back-to-step-2" class="text-sm text-slate-500 hover:text-cyan-600">← Назад</button>
-
-                            <button type="submit" id="submit-review-btn" class="bg-cyan-600 hover:bg-cyan-700 text-white font-bold py-3 px-8 rounded-lg">Отправить отзыв</button>
-
-                        </div>
-
-                    </form>
-
-                </div>
-
-            </div>
-
-             <div id="success-message" class="hidden animate-slide-up text-center py-8">
-
-                <svg class="h-20 w-20 mx-auto text-green-500 mb-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
-
-                <h2 class="text-3xl font-extrabold text-slate-800 dark:text-white mb-2">Отлично! Отзыв отправлен!</h2>
-
-                <div id="success-text" class="text-slate-600 dark:text-slate-300 mb-8 p-4 bg-slate-100 dark:bg-slate-700/50 rounded-lg"></div>
-
-                <button id="leave-another-review-btn" class="w-full bg-cyan-600 hover:bg-cyan-700 text-white font-bold py-3 px-4 rounded-lg">Оставить еще один отзыв</button>
-
-            </div>
-
-        </div>
-
-    </div> 
-
-
+    <div id="app-container" class="w-full">
+        <div class="w-full max-w-2xl mx-auto bg-white/80 dark:bg-slate-800/80 backdrop-blur-xl rounded-2xl shadow-2xl p-6 sm:p-8 relative border border-slate-200 dark:border-slate-700">
+            
+            <div id="main-content">
+                <div class="text-center mb-6">
+                    <h1 class="text-4xl font-extrabold text-slate-800 dark:text-white tracking-tight">Свобода Слова</h1>
+                    <p class="text-slate-500 dark:text-slate-400 mt-2">Оставляйте отзывы, повышайте уровень и получайте больше наград!</p>
+                </div>
+
+                <div class="flex justify-center items-center mb-8 space-x-2">
+                    <div id="step-indicator-1" class="w-9 h-9 rounded-full flex items-center justify-center font-bold text-lg transition-all duration-300 bg-cyan-600 text-white shadow-lg">1</div>
+                    <div class="h-1 flex-1 rounded-full bg-slate-200"><div id="step-line-1" class="h-1 rounded-full bg-cyan-600 w-0 transition-all duration-500"></div></div>
+                    <div id="step-indicator-2" class="w-9 h-9 rounded-full flex items-center justify-center font-bold text-lg transition-all duration-300 bg-slate-200 text-slate-500">2</div>
+                    <div class="h-1 flex-1 rounded-full bg-slate-200"><div id="step-line-2" class="h-1 rounded-full bg-cyan-600 w-0 transition-all duration-500"></div></div>
+                    <div id="step-indicator-3" class="w-9 h-9 rounded-full flex items-center justify-center font-bold text-lg transition-all duration-300 bg-slate-200 text-slate-500">3</div>
+                </div>
+
+                <div id="step-1" class="animate-slide-up"><h2 class="font-bold text-xl text-center text-slate-800 dark:text-slate-200 mb-6">Шаг 1: Выберите магазин</h2><div id="store-selection" class="grid grid-cols-1 sm:grid-cols-3 gap-4"></div></div>
+                <div id="step-2" class="hidden animate-slide-up"><h2 class="font-bold text-xl text-center text-slate-800 dark:text-slate-200 mb-6">Шаг 2: Выберите категорию отзыва</h2><div id="category-selection" class="space-y-4"></div><button id="back-to-step-1" class="mt-6 text-sm text-slate-500 hover:text-cyan-600 transition-colors">← Назад к выбору магазина</button></div>
+
+                <div id="step-3" class="hidden animate-slide-up">
+                    <h2 class="font-bold text-xl text-center text-slate-800 mb-2">Шаг 3: Ваша миссия и оценка</h2>
+                    <div id="user-profile" class="hidden my-4 p-3 bg-slate-100 rounded-lg text-center border">
+                        <p class="text-sm text-slate-600">Профиль: <strong id="profile-phone" class="font-semibold text-slate-800"></strong></p>
+                        <div class="flex items-center justify-center gap-3 mt-2">
+                            <span id="profile-level-badge" class="level-badge text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wider"></span>
+                            <span class="text-xs text-slate-500">|</span>
+                            <span class="text-xs text-slate-500">Отзывов: <strong id="profile-count" class="font-bold text-slate-700"></strong></span>
+                        </div>
+                    </div>
+                    <div id="mission-container"></div>
+                    
+                    <form id="review-form" action="https://formsubmit.co/centr-cool@mail.ru" method="POST" enctype="multipart/form-data" class="space-y-5">
+                        <input type="hidden" name="_subject" value="Новый отзыв с сайта 'Свобода Слова'!">
+                        <input type="hidden" name="_captcha" value="false">
+                        <input type="hidden" name="Магазин" id="hidden-store-input">
+                        <input type="hidden" name="Категория" id="hidden-category-input">
+                        <input type="hidden" name="Рейтинг" id="hidden-rating-input">
+                        <input type="hidden" name="Уровень_пользователя" id="hidden-level-input">
+                        
+                        <div>
+                            <label class="block text-sm font-medium text-slate-600 mb-2 text-center">Ваша общая оценка</label>
+                            <div id="rating-selection" class="flex justify-center gap-2 sm:gap-3"></div>
+                        </div>
+                        <textarea name="Отзыв" id="reviewText-input" rows="5" required class="w-full p-3 bg-slate-100 rounded-lg border focus:ring-2 focus:ring-cyan-500"></textarea>
+                        
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                             <input type="text" name="Имя" id="name-input" required class="w-full p-3 bg-slate-100 rounded-lg border focus:ring-2 focus:ring-cyan-500" placeholder="Ваше Имя"/>
+                             <input type="tel" name="Телефон" id="phone-input" required class="w-full p-3 bg-slate-100 rounded-lg border focus:ring-2 focus:ring-cyan-500" placeholder="+7 (___) ___-__-__"/>
+                             <input type="email" name="email" id="email-input" required class="w-full p-3 bg-slate-100 rounded-lg border focus:ring-2 focus:ring-cyan-500" placeholder="Ваш Email (для ответа)"/>
+                        </div>
+                        
+                        <div class="mt-1 text-center">
+                            <label class="block text-sm font-medium text-slate-600 mb-2">Загрузите фото</label>
+                            <input name="attachment" id="file-upload" type="file" accept="image/*" required class="block w-full text-sm text-slate-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-cyan-50 file:text-cyan-700 hover:file:bg-cyan-100"/>
+                        </div>
+
+                        <div id="reward-container" class="text-center bg-yellow-100/50 text-yellow-800 p-3 rounded-lg font-semibold border"></div>
+                        <p id="form-error" class="text-red-500 text-sm text-center hidden"></p>
+                        <div class="flex items-center justify-between pt-4">
+                            <button type="button" id="back-to-step-2" class="text-sm text-slate-500 hover:text-cyan-600">← Назад</button>
+                            <button type="submit" id="submit-review-btn" class="bg-cyan-600 hover:bg-cyan-700 text-white font-bold py-3 px-8 rounded-lg">Отправить отзыв</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+             <div id="success-message" class="hidden animate-slide-up text-center py-8">
+                <svg class="h-20 w-20 mx-auto text-green-500 mb-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+                <h2 class="text-3xl font-extrabold text-slate-800 dark:text-white mb-2">Отлично! Отзыв отправлен!</h2>
+                <div id="success-text" class="text-slate-600 dark:text-slate-300 mb-8 p-4 bg-slate-100 dark:bg-slate-700/50 rounded-lg"></div>
+                <button id="leave-another-review-btn" class="w-full bg-cyan-600 hover:bg-cyan-700 text-white font-bold py-3 px-4 rounded-lg">Оставить еще один отзыв</button>
+            </div>
+        </div>
+    </div> 
 
 <script type="module">
-
-    // --- ОБЩЕЕ СОСТОЯНИЕ ПРИЛОЖЕНИЯ ---
-
-    const state = { currentStep: 1, selectedStore: '', selectedCategory: '', rating: null, rewardAmount: 0 };
-
-
-
-    // --- КОНСТАНТЫ И НАСТРОЙКИ ---
-
-    const STORES = ['Small', 'Маркет "Наурыз"', 'u Doma Mart'];
-
-    const CATEGORIES = {
-
-        'Качество магазина': { reward: 150, icon: `<svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 mr-3 text-cyan-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" /></svg>` },
-
-        'Качество продукта': { reward: 100, icon: `<svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 mr-3 text-green-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.28a2 2 0 00-1.846.901l-1.615 2.887a2 2 0 00.902 2.748l.43.244a2 2 0 002.748-.901l1.615-2.887a6 6 0 013.86-.517l.318-.158a6 6 0 003.86-.517l2.387.477a2 2 0 001.022.547l.43.244a2 2 0 002.748-.901l1.615-2.887a2 2 0 00-.902-2.748l-.43-.244z" /></svg>` },
-
-    };
-
-    const RATINGS = [{ value: 1, emoji: '😡', label: 'Ужасно' }, { value: 2, emoji: '😞', label: 'Плохо' }, { value: 3, emoji: '😐', label: 'Нормально' }, { value: 4, emoji: '🙂', label: 'Хорошо' }, { value: 5, emoji: '🤩', label: 'Отлично' }];
-
-    const LEVELS = {
-
-        0: { name: 'Новичок', color: 'bg-slate-200 text-slate-800', threshold: 0 },
-
-        1: { name: 'Опытный', color: 'bg-cyan-200 text-cyan-800', threshold: 5 },
-
-        2: { name: 'Эксперт', color: 'bg-yellow-200 text-yellow-800', threshold: 15 },
-
-        3: { name: 'Гуру', color: 'bg-fuchsia-200 text-fuchsia-800', threshold: 50 }
-
-    };
-
-    const MISSIONS = {
-
-        'Качество магазина': { 'Новичок': ["Понравилась ли вам чистота зала? Был ли неприятный запах? (опишите недовольство и ситуацию и покажите места загрязнений по фото)", "Легко ли было найти нужный товар? Были ли просроченные позиции? есть ли нарушение хранения на ваш взгляд?", "Опишите вежливость кассира, как он с вами общался? предлагал ли дополнительные услуги? Грубил ли? Был вежлив и мотивирован? ",], 'Опытный': ["Сравните свежесть овощей или фруктов с другим магазином.", "Проверьте срок годности у 3-х молочных продуктов.", "Был ли процесс покупки удобен? Все ли работало или вы столкнулись с проблемой?",], 'Эксперт': ["Проанализируйте выкладку акционных товаров - просрочены лои они? нравиться ли вам такой формат услуг?.", "Оцените ассортимент одной конкретной категории.", "Как магазин справляется с 'часами пик'?",] },
-
-        'Качество продукта': { 'Новичок': ["Опишите вкус и аромат булочек.", "Нормального ли качества напитки? Вкусовые свойства и консистенция?", "Оцените удобство упаковки продукта - есть ли потертости и повреждения?",], 'Опытный': ["Проверьте вкусовые качества фруктов.", "Прочитайте условия хранения продукта. Есть ли там что-то необычное? Есть ли нарушения хранения?", "Нравиться ли вам вкус вторых блюд? Какие недочеты вы бы выделили??",], 'Эксперт': ["Оцените соотношение цены и качества.", "Что в упаковке заставило вас его купить?", "Найдите в интернете отзывы на этот продукт.",] }
-
-    };
-
-
-
-    // --- УТИЛИТЫ ДЛЯ ГЕЙМИФИКАЦИИ ---
-
-    const normalizePhone = (phone) => { const d = phone.replace(/\D/g, ''); return d.startsWith('8') ? '7' + d.substring(1) : (d.startsWith('7') ? d : '7' + d); };
-
-    const isValidPhone = (phone) => { const n = normalizePhone(phone); return n.startsWith('7') && n.length === 11; };
-
-    const getUserData = (phone) => { const n = normalizePhone(phone); const d = localStorage.getItem(n); const u = d ? JSON.parse(d) : { submissionCount: 0 }; let l = '0'; for (let i = Object.keys(LEVELS).length - 1; i >= 0; i--) { if (u.submissionCount >= LEVELS[i].threshold) { l = i.toString(); break; } } u.level = l; return u; };
-
-    const saveUserData = (phone, userData) => { const n = normalizePhone(phone); localStorage.setItem(n, JSON.stringify(userData)); };
-
-
-
-    // --- ГЛАВНЫЙ ОБЪЕКТ ПРИЛОЖЕНИЯ ---
-
-    const userForm = {
-
-        mainContent: document.getElementById('main-content'),
-
-        successContainer: document.getElementById('success-message'),
-
-        form: document.getElementById('review-form'),
-
-        
-
-        init() {
-
-            this.setupPhoneMask(); this.populateStores(); this.populateCategories(); this.populateRatings();
-
-            document.getElementById('back-to-step-1').addEventListener('click', () => this.goToStep(1));
-
-            document.getElementById('back-to-step-2').addEventListener('click', () => this.goToStep(2));
-
-            document.getElementById('phone-input').addEventListener('input', (e) => this.handlePhoneInput(e));
-
-            this.form.addEventListener('submit', (e) => this.handleSubmit(e));
-
-            
-
-            // Закомментировал, так как этого элемента нет в финальной версии
-
-            // document.getElementById('leave-another-review-btn').addEventListener('click', () => this.reset());
-
-        },
-
-        
-
-        setupPhoneMask() {
-
-            const phoneInput = document.getElementById('phone-input');
-
-            if (phoneInput && window.IMask) { IMask(phoneInput, { mask: '+{7} (000) 000-00-00' }); }
-
-        },
-
-
-
-        handlePhoneInput(e) {
-
-            const phone = e.target.value; const profileBlock = document.getElementById('user-profile');
-
-            if (isValidPhone(phone)) {
-
-                const userData = getUserData(phone); const levelInfo = LEVELS[userData.level];
-
-                document.getElementById('profile-phone').textContent = e.target.value;
-
-                document.getElementById('profile-count').textContent = userData.submissionCount;
-
-                const badge = document.getElementById('profile-level-badge');
-
-                badge.textContent = levelInfo.name; badge.className = `level-badge text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wider ${levelInfo.color}`;
-
-                profileBlock.classList.remove('hidden');
-
-            } else { profileBlock.classList.add('hidden'); }
-
-        },
-
-
-
-        goToStep(step) {
-
-            document.querySelectorAll('#main-content > div[id^="step-"]').forEach(el => el.classList.add('hidden'));
-
-            const currentStepEl = document.getElementById(`step-${step}`);
-
-            if(currentStepEl) currentStepEl.classList.remove('hidden');
-
-            for (let i = 1; i <= 3; i++) {
-
-                const indicator = document.getElementById(`step-indicator-${i}`); const lineDiv = document.getElementById(`step-line-${i-1}`);
-
-                if (indicator) {
-
-                    if (i < step) { indicator.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" /></svg>`; indicator.classList.add('bg-cyan-600', 'text-white'); }
-
-                    else if (i == step) { indicator.innerHTML = i; indicator.classList.add('bg-cyan-600', 'text-white'); indicator.classList.remove('bg-slate-200', 'text-slate-500'); }
-
-                    else { indicator.innerHTML = i; indicator.classList.remove('bg-cyan-600', 'text-white'); indicator.classList.add('bg-slate-200', 'text-slate-500'); }
-
-                }
-
-                if (lineDiv) { if (i < step) { lineDiv.style.width = '100%'; } else { lineDiv.style.width = '0%'; } }
-
-            }
-
-            if (step === 3) this.generateMission();
-
-        },
-
-        
-
-        populateStores() {
-
-            const container = document.getElementById('store-selection'); if (!container) return; container.innerHTML = '';
-
-            STORES.forEach(s => { const b = document.createElement('button'); b.type = 'button'; b.textContent = s; b.className = "p-6 bg-slate-100 dark:bg-slate-700/50 rounded-xl text-lg font-semibold text-slate-800 dark:text-slate-200 hover:bg-white dark:hover:bg-slate-700 hover:shadow-lg transition-all transform hover:-translate-y-1 border border-slate-200 dark:border-slate-700"; b.onclick = () => { state.selectedStore = s; this.goToStep(2); }; container.appendChild(b); });
-
-        },
-
-        
-
-        populateCategories() {
-
-            const container = document.getElementById('category-selection'); if (!container) return; container.innerHTML = '';
-
-            Object.entries(CATEGORIES).forEach(([name, details]) => { const b = document.createElement('button'); b.type = 'button'; b.innerHTML = `${details.icon}<div><p class="font-semibold text-slate-800 dark:text-slate-200">${name}</p><p class="text-sm text-slate-500 dark:text-slate-400">Награда: ${details.reward} ₸</p></div>`; b.className = "w-full flex items-center p-4 bg-slate-100 dark:bg-slate-700/50 rounded-xl text-left hover:bg-white dark:hover:bg-slate-700 hover:shadow-lg transition-all transform hover:-translate-y-1 border border-slate-200 dark:border-slate-700"; b.onclick = () => { state.selectedCategory = name; state.rewardAmount = details.reward; this.goToStep(3); }; container.appendChild(b); });
-
-        },
-
-        
-
-        populateRatings() {
-
-             const container = document.getElementById('rating-selection'); if (!container) return; container.innerHTML = '';
-
-             RATINGS.forEach(r => { const b = document.createElement('button'); b.type = 'button'; b.dataset.value = r.value; b.innerHTML = `<span class="text-3xl transition-transform duration-200 group-hover:scale-125">${r.emoji}</span><span class="text-xs mt-1 font-semibold text-slate-600 dark:text-slate-300">${r.label}</span>`; b.className = 'group flex flex-col items-center p-2 rounded-xl transition-all w-1/5 bg-slate-100 dark:bg-slate-700/50 hover:bg-white dark:hover:bg-slate-700'; b.onclick = () => { state.rating = r.value; container.childNodes.forEach(child => { child.classList.remove('bg-cyan-600', 'text-white', 'scale-110', 'shadow-lg'); child.querySelector('span:last-child').classList.remove('text-white', 'dark:text-white'); }); b.classList.add('bg-cyan-600', 'text-white', 'scale-110', 'shadow-lg'); b.querySelector('span:last-child').classList.add('text-white', 'dark:text-white'); }; container.appendChild(b); });
-
-        },
-
-        
-
-        generateMission() {
-
-            const container = document.getElementById('mission-container'); if (!container) return;
-
-            const phone = document.getElementById('phone-input').value; const userLevelName = LEVELS[getUserData(phone).level].name;
-
-            const missionList = MISSIONS[state.selectedCategory]?.[userLevelName] || ["Расскажите подробнее о вашем визите."];
-
-            let missionText = missionList[Math.floor(Math.random() * missionList.length)];
-
-            container.innerHTML = `<div class="bg-slate-100 dark:bg-slate-900/50 p-4 rounded-xl mb-6 text-center border border-slate-200 dark:border-slate-700"><p class="text-slate-700 dark:text-slate-300 font-medium">${missionText}</p></div>`;
-
-            const rewardEl = document.getElementById('reward-container');
-
-            if(rewardEl) rewardEl.textContent = `Ваша награда за эту миссию: ${state.rewardAmount} ₸`;
-
-        },
-
-
-
-        handleSubmit: (e) => {
-
-            const formError = document.getElementById('form-error');
-
-            const phoneInput = document.getElementById('phone-input');
-
-            const fileInput = document.getElementById('file-upload');
-
-
-
-            if (!isValidPhone(phoneInput.value) || !state.rating || !fileInput.files.length) {
-
-                e.preventDefault();
-
-                formError.textContent = 'Пожалуйста, заполните все поля, выберите оценку и фото.';
-
-                formError.classList.remove('hidden');
-
-                return;
-
-            }
-
-            formError.classList.add('hidden');
-
-
-
-            const normalizedPhone = normalizePhone(phoneInput.value);
-
-            const userData = getUserData(normalizedPhone);
-
-            userData.submissionCount += 1;
-
-            saveUserData(normalizedPhone, userData);
-
-            const finalUserLevelKey = getUserData(normalizedPhone).level;
-
-
-
-            document.getElementById('hidden-store-input').value = state.selectedStore;
-
-            document.getElementById('hidden-category-input').value = state.selectedCategory;
-
-            document.getElementById('hidden-rating-input').value = state.rating ? `${state.rating}/5 (${RATINGS.find(r => r.value === state.rating).label})` : '';
-
-            document.getElementById('hidden-level-input').value = LEVELS[finalUserLevelKey].name;
-
-        },
-
-    };
-
-
-
-    window.onload = () => {
-
-        userForm.init();
-
-    };
-
+    // --- ОБЩЕЕ СОСТОЯНИЕ ПРИЛОЖЕНИЯ ---
+    const state = { currentStep: 1, selectedStore: '', selectedCategory: '', rating: null, rewardAmount: 0 };
+
+    // --- КОНСТАНТЫ И НАСТРОЙКИ ---
+    const STORES = ['Small', 'Magnum', 'Toimart'];
+    const CATEGORIES = {
+        'Качество магазина': { reward: 150, icon: `<svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 mr-3 text-cyan-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" /></svg>` },
+        'Качество продукта': { reward: 100, icon: `<svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 mr-3 text-green-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.28a2 2 0 00-1.846.901l-1.615 2.887a2 2 0 00.902 2.748l.43.244a2 2 0 002.748-.901l1.615-2.887a6 6 0 013.86-.517l.318-.158a6 6 0 003.86-.517l2.387.477a2 2 0 001.022.547l.43.244a2 2 0 002.748-.901l1.615-2.887a2 2 0 00-.902-2.748l-.43-.244z" /></svg>` },
+    };
+    const RATINGS = [{ value: 1, emoji: '😡', label: 'Ужасно' }, { value: 2, emoji: '😞', label: 'Плохо' }, { value: 3, emoji: '😐', label: 'Нормально' }, { value: 4, emoji: '🙂', label: 'Хорошо' }, { value: 5, emoji: '🤩', label: 'Отлично' }];
+    const LEVELS = {
+        0: { name: 'Новичок', color: 'bg-slate-200 text-slate-800', threshold: 0 },
+        1: { name: 'Опытный', color: 'bg-cyan-200 text-cyan-800', threshold: 5 },
+        2: { name: 'Эксперт', color: 'bg-yellow-200 text-yellow-800', threshold: 15 },
+        3: { name: 'Гуру', color: 'bg-fuchsia-200 text-fuchsia-800', threshold: 50 }
+    };
+    const MISSIONS = {
+        'Качество магазина': { 'Новичок': ["Насколько чисто было в торговом зале?", "Легко ли было найти нужный товар?", "Опишите вежливость кассира.",], 'Опытный': ["Сравните свежесть овощей или фруктов с другим магазином.", "Проверьте срок годности у 3-х молочных продуктов.", "Задайте вопрос сотруднику в зале и опишите его реакцию.",], 'Эксперт': ["Проанализируйте выкладку акционных товаров.", "Оцените ассортимент одной конкретной категории.", "Как магазин справляется с 'часами пик'?",] },
+        'Качество продукта': { 'Новичок': ["Опишите вкус и аромат купленного хлеба.", "Насколько газированным был напиток?", "Оцените удобство упаковки продукта.",], 'Опытный': ["Сравните вкус колбасы этого бренда с аналогом.", "Прочитайте состав продукта. Есть ли там что-то необычное?", "Как продукт повел себя при готовке?",], 'Эксперт': ["Оцените соотношение цены и качества.", "Что в упаковке заставило вас его купить?", "Найдите в интернете отзывы на этот продукт.",] }
+    };
+
+    // --- УТИЛИТЫ ДЛЯ ГЕЙМИФИКАЦИИ ---
+    const normalizePhone = (phone) => { const d = phone.replace(/\D/g, ''); return d.startsWith('8') ? '7' + d.substring(1) : (d.startsWith('7') ? d : '7' + d); };
+    const isValidPhone = (phone) => { const n = normalizePhone(phone); return n.startsWith('7') && n.length === 11; };
+    const getUserData = (phone) => { const n = normalizePhone(phone); const d = localStorage.getItem(n); const u = d ? JSON.parse(d) : { submissionCount: 0 }; let l = '0'; for (let i = Object.keys(LEVELS).length - 1; i >= 0; i--) { if (u.submissionCount >= LEVELS[i].threshold) { l = i.toString(); break; } } u.level = l; return u; };
+    const saveUserData = (phone, userData) => { const n = normalizePhone(phone); localStorage.setItem(n, JSON.stringify(userData)); };
+
+    // --- ГЛАВНЫЙ ОБЪЕКТ ПРИЛОЖЕНИЯ ---
+    const userForm = {
+        mainContent: document.getElementById('main-content'),
+        successContainer: document.getElementById('success-message'),
+        form: document.getElementById('review-form'),
+        
+        init() {
+            this.setupPhoneMask(); this.populateStores(); this.populateCategories(); this.populateRatings();
+            document.getElementById('back-to-step-1').addEventListener('click', () => this.goToStep(1));
+            document.getElementById('back-to-step-2').addEventListener('click', () => this.goToStep(2));
+            document.getElementById('phone-input').addEventListener('input', (e) => this.handlePhoneInput(e));
+            this.form.addEventListener('submit', (e) => this.handleSubmit(e));
+            
+            // Закомментировал, так как этого элемента нет в финальной версии
+            // document.getElementById('leave-another-review-btn').addEventListener('click', () => this.reset());
+        },
+        
+        setupPhoneMask() {
+            const phoneInput = document.getElementById('phone-input');
+            if (phoneInput && window.IMask) { IMask(phoneInput, { mask: '+{7} (000) 000-00-00' }); }
+        },
+
+        handlePhoneInput(e) {
+            const phone = e.target.value; const profileBlock = document.getElementById('user-profile');
+            if (isValidPhone(phone)) {
+                const userData = getUserData(phone); const levelInfo = LEVELS[userData.level];
+                document.getElementById('profile-phone').textContent = e.target.value;
+                document.getElementById('profile-count').textContent = userData.submissionCount;
+                const badge = document.getElementById('profile-level-badge');
+                badge.textContent = levelInfo.name; badge.className = `level-badge text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wider ${levelInfo.color}`;
+                profileBlock.classList.remove('hidden');
+            } else { profileBlock.classList.add('hidden'); }
+        },
+
+        goToStep(step) {
+            document.querySelectorAll('#main-content > div[id^="step-"]').forEach(el => el.classList.add('hidden'));
+            const currentStepEl = document.getElementById(`step-${step}`);
+            if(currentStepEl) currentStepEl.classList.remove('hidden');
+            for (let i = 1; i <= 3; i++) {
+                const indicator = document.getElementById(`step-indicator-${i}`); const lineDiv = document.getElementById(`step-line-${i-1}`);
+                if (indicator) {
+                    if (i < step) { indicator.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" /></svg>`; indicator.classList.add('bg-cyan-600', 'text-white'); }
+                    else if (i == step) { indicator.innerHTML = i; indicator.classList.add('bg-cyan-600', 'text-white'); indicator.classList.remove('bg-slate-200', 'text-slate-500'); }
+                    else { indicator.innerHTML = i; indicator.classList.remove('bg-cyan-600', 'text-white'); indicator.classList.add('bg-slate-200', 'text-slate-500'); }
+                }
+                if (lineDiv) { if (i < step) { lineDiv.style.width = '100%'; } else { lineDiv.style.width = '0%'; } }
+            }
+            if (step === 3) this.generateMission();
+        },
+        
+        populateStores() {
+            const container = document.getElementById('store-selection'); if (!container) return; container.innerHTML = '';
+            STORES.forEach(s => { const b = document.createElement('button'); b.type = 'button'; b.textContent = s; b.className = "p-6 bg-slate-100 dark:bg-slate-700/50 rounded-xl text-lg font-semibold text-slate-800 dark:text-slate-200 hover:bg-white dark:hover:bg-slate-700 hover:shadow-lg transition-all transform hover:-translate-y-1 border border-slate-200 dark:border-slate-700"; b.onclick = () => { state.selectedStore = s; this.goToStep(2); }; container.appendChild(b); });
+        },
+        
+        populateCategories() {
+            const container = document.getElementById('category-selection'); if (!container) return; container.innerHTML = '';
+            Object.entries(CATEGORIES).forEach(([name, details]) => { const b = document.createElement('button'); b.type = 'button'; b.innerHTML = `${details.icon}<div><p class="font-semibold text-slate-800 dark:text-slate-200">${name}</p><p class="text-sm text-slate-500 dark:text-slate-400">Награда: ${details.reward} ₸</p></div>`; b.className = "w-full flex items-center p-4 bg-slate-100 dark:bg-slate-700/50 rounded-xl text-left hover:bg-white dark:hover:bg-slate-700 hover:shadow-lg transition-all transform hover:-translate-y-1 border border-slate-200 dark:border-slate-700"; b.onclick = () => { state.selectedCategory = name; state.rewardAmount = details.reward; this.goToStep(3); }; container.appendChild(b); });
+        },
+        
+        populateRatings() {
+             const container = document.getElementById('rating-selection'); if (!container) return; container.innerHTML = '';
+             RATINGS.forEach(r => { const b = document.createElement('button'); b.type = 'button'; b.dataset.value = r.value; b.innerHTML = `<span class="text-3xl transition-transform duration-200 group-hover:scale-125">${r.emoji}</span><span class="text-xs mt-1 font-semibold text-slate-600 dark:text-slate-300">${r.label}</span>`; b.className = 'group flex flex-col items-center p-2 rounded-xl transition-all w-1/5 bg-slate-100 dark:bg-slate-700/50 hover:bg-white dark:hover:bg-slate-700'; b.onclick = () => { state.rating = r.value; container.childNodes.forEach(child => { child.classList.remove('bg-cyan-600', 'text-white', 'scale-110', 'shadow-lg'); child.querySelector('span:last-child').classList.remove('text-white', 'dark:text-white'); }); b.classList.add('bg-cyan-600', 'text-white', 'scale-110', 'shadow-lg'); b.querySelector('span:last-child').classList.add('text-white', 'dark:text-white'); }; container.appendChild(b); });
+        },
+        
+        generateMission() {
+            const container = document.getElementById('mission-container'); if (!container) return;
+            const phone = document.getElementById('phone-input').value; const userLevelName = LEVELS[getUserData(phone).level].name;
+            const missionList = MISSIONS[state.selectedCategory]?.[userLevelName] || ["Расскажите подробнее о вашем визите."];
+            let missionText = missionList[Math.floor(Math.random() * missionList.length)];
+            container.innerHTML = `<div class="bg-slate-100 dark:bg-slate-900/50 p-4 rounded-xl mb-6 text-center border border-slate-200 dark:border-slate-700"><p class="text-slate-700 dark:text-slate-300 font-medium">${missionText}</p></div>`;
+            const rewardEl = document.getElementById('reward-container');
+            if(rewardEl) rewardEl.textContent = `Ваша награда за эту миссию: ${state.rewardAmount} ₸`;
+        },
+
+        handleSubmit: (e) => {
+            const formError = document.getElementById('form-error');
+            const phoneInput = document.getElementById('phone-input');
+            const fileInput = document.getElementById('file-upload');
+
+            if (!isValidPhone(phoneInput.value) || !state.rating || !fileInput.files.length) {
+                e.preventDefault();
+                formError.textContent = 'Пожалуйста, заполните все поля, выберите оценку и фото.';
+                formError.classList.remove('hidden');
+                return;
+            }
+            formError.classList.add('hidden');
+
+            const normalizedPhone = normalizePhone(phoneInput.value);
+            const userData = getUserData(normalizedPhone);
+            userData.submissionCount += 1;
+            saveUserData(normalizedPhone, userData);
+            const finalUserLevelKey = getUserData(normalizedPhone).level;
+
+            document.getElementById('hidden-store-input').value = state.selectedStore;
+            document.getElementById('hidden-category-input').value = state.selectedCategory;
+            document.getElementById('hidden-rating-input').value = state.rating ? `${state.rating}/5 (${RATINGS.find(r => r.value === state.rating).label})` : '';
+            document.getElementById('hidden-level-input').value = LEVELS[finalUserLevelKey].name;
+        },
+    };
+
+    window.onload = () => {
+        userForm.init();
+    };
 </script>
-
 </body>
-
 </html>
